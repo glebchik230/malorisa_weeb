@@ -2,87 +2,44 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Малориса - Обучение персонала</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malorisa WebApp</title>
+  <script defer src="profile.js"></script>
+  <link href="https://avatars.mds.yandex.net/get-socsnippets/12770649/2a00000197c3e6298abf1185802941e638bf/square_83">
 </head>
-<body class="bg-gray-900 text-white min-h-screen relative font-sans">
+<body class="bg-gray-900 text-white min-h-screen">
 
-  <!-- Главный экран -->
-  <main id="main-content" class="max-w-3xl mx-auto p-6">
-    <img
-      src="https://avatars.mds.yandex.net/get-socsnippets/12770649/2a00000197c3e6298abf1185802941e638bf/square_83"
-      alt="Логотип Малориса"
-      class="mx-auto mb-6 rounded"
-    />
-    <h1 class="text-3xl font-bold mb-4 text-center">Здравствуйте!</h1>
-    <p class="mb-4 leading-relaxed text-center">
-      Мы — онлайн-ресторан <strong>«Малориса»</strong>. Рады приветствовать вас в нашем приложении.
-      Если вы здесь, значит, скоро станете частью нашей команды.
-      Пbr>Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.
-      Тест связан с вашей будущей должностью и обязанностями.
-    </p>
-    <p class="text-center mb-6">
-      Ознакомиться с меню можно по ссылке:
-      <a href="https://malorisa.ru/" target="_blank" class="text-blue-400 underline">malorisa.ru</a>
-    </p>
-  </main>
-
-  <!-- Кнопка "Личный кабинет" -->
-  <button
-    id="open-profile"
-    class="fixed top-4 right-4 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded z-40"
-  >
-    Личный кабинет
-  </button>
-
-  <!-- Всплывающее окно личного кабинета -->
-  <div
-    id="profile-panel"
-    class="fixed top-0 right-0 w-full max-w-md h-full bg-gray-800 p-6 transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto shadow-lg"
-  >
-    <!-- Кнопка "Вернуться на главный экран" -->
-    <button
-      id="close-profile"
-      class="mb-6 bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded"
-    >
-      ← Вернуться на главный экран
-    </button>
-
-    <!-- Форма регистрации -->
-    <div id="registration-form">
-      <h2 class="text-2xl font-bold mb-4">Регистрация</h2>
-      <input
-        id="name"
-        type="text"
-        placeholder="Имя"
-        class="w-full mb-3 p-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-blue-500"
-      />
-      <input
-        id="phone"
-        type="text"
-        placeholder="Номер телефона"
-        class="w-full mb-3 p-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-blue-500"
-      />
-      <input
-        id="telegram"
-        type="text"
-        placeholder="Telegram ID"
-        class="w-full mb-3 p-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-blue-500"
-      />
-      <button
-        id="register-btn"
-        class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded"
-      >
-        Зарегистрироваться
-      </button>
-    </div>
-
-    <!-- Личный кабинет -->
-    <div id="user-info" class="hidden mt-6"></div>
+  <div class="p-4 flex justify-between items-center border-b border-gray-700">
+    <h1 class="text-xl font-bold">Онлайн-ресторан Малориса</h1>
+    <button id="open-profile" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">Личный кабинет</button>
   </div>
 
-  <!-- Подключаем JS -->
-  <script src="profile.js"></script>
+  <div class="p-6">
+    <img src="https://vsem-edu-oblako.ru/upload/store/merchant537/logotip41748929613.png?w=600&h=450" alt="Логотип" class="w-64 mx-auto mb-6">
+    <p class="text-center max-w-xl mx-auto">
+      Здравствуйте! Мы — онлайн-ресторан «Малориса». Рады приветствовать вас в нашем приложении.
+      Если вы здесь, значит, скоро станете частью нашей команды.
+      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.
+      Тест связан с вашей будущей должностью и обязанностями.
+      С меню нашего заведения вы можете ознакомиться по ссылке:
+      <a href="https://malorisa.ru/" class="text-blue-400 underline">https://malorisa.ru/</a>.
+    </p>
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="profile-panel" class="fixed top-0 left-0 w-full sm:w-96 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+    <div class="flex justify-between items-center p-4 border-b border-gray-600">
+      <h2 class="text-lg font-semibold">Регистрация</h2>
+      <button id="close-profile" class="text-gray-300 hover:text-white">&times;</button>
+    </div>
+
+    <div class="p-4 space-y-4">
+      <input type="text" id="name" placeholder="Имя" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
+      <input type="text" id="phone" placeholder="Номер телефона" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
+      <input type="text" id="telegram" placeholder="Telegram ID" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
+      <button id="register-btn" class="w-full bg-blue-600 py-2 rounded hover:bg-blue-500">Зарегистрироваться</button>
+    </div>
+  </div>
+
 </body>
 </html>
