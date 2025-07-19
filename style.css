@@ -55,18 +55,17 @@ a:hover {
 .sidebar {
   position: fixed;
   top: 0;
-  left: -280px; /* спрятана слева */
-  width: 260px;
+  left: -260px;
+  width: 240px;
   height: 100%;
-  background-color: #fff0f6; /* очень светло-розовый */
-  box-shadow: 2px 0 12px rgba(204, 102, 153, 0.3);
-  padding: 30px 20px;
-  box-sizing: border-box;
-  transition: left 0.3s ease;
-  z-index: 9999;
+  background-color: #ffeef5;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  transition: left 0.3s ease;
+  z-index: 9999; /* Сделано поверх всех остальных */
 }
 
 .sidebar.active {
