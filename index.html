@@ -12,44 +12,43 @@
     <button id="btn-profile" class="btn btn-profile">Личный кабинет</button>
   </header>
 
+  <!-- Главный экран -->
   <main id="main-screen" class="screen active">
-  <h1>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
-  <p>
-    Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
-    Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей
-    будущей должностью и обязанностями. С меню нашего заведения вы можете ознакомиться по ссылке:
-    <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
-  </p>
-  <div class="buttons-row">
-    <button class="btn btn-hot" id="open-hot">Горячий цех</button>
-    <button class="btn btn-cold" id="open-cold">Холодный цех</button>
-    <button class="btn btn-operators" id="open-operators">Операторы колл-центра</button>
-  </div>
+    <h1>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
+    <p>
+      Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
+      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей
+      будущей должностью и обязанностями. С меню нашего заведения вы можете ознакомиться по ссылке:
+      <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
+    </p>
 
-  <!-- Форма регистрации -->
-  <form id="register-form" class="register-form" novalidate>
-    <h3>Регистрация сотрудника</h3>
-    <label>
-      Имя:
-      <input type="text" id="reg-name" name="name" required />
-    </label>
-    <label>
-      Номер телефона:
-      <input type="tel" id="reg-phone" name="phone" required placeholder="+79001234567" pattern="^\+?\d{10,15}$" />
-    </label>
-    <label>
-      Telegram ID:
-      <input type="text" id="reg-telegramId" name="telegramId" required />
-    </label>
-    <button type="submit" class="btn btn-submit">Зарегистрироваться</button>
-  </form>
+    <form id="register-form" class="register-form">
+      <label>
+        Имя:
+        <input type="text" id="reg-name" name="name" required />
+      </label>
+      <label>
+        Номер телефона:
+        <input type="tel" id="reg-phone" name="phone" required />
+      </label>
+      <label>
+        Телеграм ID:
+        <input type="text" id="reg-telegramId" name="telegramId" required />
+      </label>
+      <button type="submit" class="btn btn-submit">Зарегистрироваться</button>
+    </form>
 
-  <!-- Сообщение об успешной регистрации -->
-  <div id="register-success" class="register-success hidden">
-    <p>Успешная регистрация!</p>
-    <button id="to-profile-btn" class="btn btn-main">Перейти в личный кабинет</button>
-  </div>
-</main>
+    <div id="register-success" class="hidden">
+      <p>Регистрация прошла успешно!</p>
+      <button id="to-profile-btn" class="btn btn-submit">Перейти в личный кабинет</button>
+    </div>
+
+    <div class="buttons-row">
+      <button class="btn btn-hot" id="open-hot">Горячий цех</button>
+      <button class="btn btn-cold" id="open-cold">Холодный цех</button>
+      <button class="btn btn-operators" id="open-operators">Операторы колл-центра</button>
+    </div>
+  </main>
 
   <!-- Всплывающие окна для цехов -->
   <section id="hot-kitchen" class="popup top-popup hidden">
@@ -172,39 +171,20 @@
   <section id="profile" class="screen hidden">
     <button class="close-btn" id="close-profile">&times;</button>
     <h2>Личный кабинет</h2>
-    <form id="profile-form">
-      <label>
-        Имя:
-        <input type="text" id="name" name="name" required />
-      </label>
-      <label>
-        Номер телефона:
-        <input type="tel" id="phone" name="phone" required />
-      </label>
-      <label>
-        Телеграм ID:
-        <input type="text" id="telegramId" name="telegramId" required />
-      </label>
-      <label class="checkbox-label">
-        <input type="checkbox" id="notifications" name="notifications" />
-        Включить уведомления
-      </label>
-      <div class="profile-buttons">
-        <button type="submit" class="btn btn-submit">Сохранить</button>
-        <button type="button" id="logout-btn" class="btn btn-logout">Выйти из учётной записи</button>
-      </div>
-    </form>
-    <div id="profile-info" class="hidden">
+    <div id="profile-content">
       <p>Добро пожаловать, <span id="user-name"></span>!</p>
       <p>Телефон: <span id="user-phone"></span></p>
       <p>Telegram ID: <span id="user-telegram"></span></p>
-      <p>Уведомления: <span id="user-notifications"></span></p>
-      <p>Задачи: <span id="user-tasks">0</span></p>
-      <p>Пройдено тестов: <span id="user-tests">0</span></p>
+      <p>Рейтинг сотрудника: <span id="user-rating">0</span></p>
+    </div>
+    <div class="profile-buttons">
+      <button id="logout-btn" class="btn btn-logout">Выйти из учётной записи</button>
+      <button id="btn-main-from-profile" class="btn btn-main">На главный экран</button>
     </div>
   </section>
 
   <script src="script.js"></script>
 </body>
 </html>
+
         
