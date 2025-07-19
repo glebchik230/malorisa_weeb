@@ -3,40 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Личный кабинет — Малориса</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Регистрация и Личный кабинет — Малориса</title>
   <style>
-    /* Базовый стиль страницы */
     body {
-      background-color: #f8f0f8;
+      background: #fff0f5;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
+      margin: 0; padding: 20px;
       color: #333;
     }
-
     .container {
-      max-width: 500px;
+      max-width: 480px;
       margin: 0 auto;
       background: white;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(204, 102, 153, 0.3);
+      box-shadow: 0 8px 24px rgba(204,102,153,0.3);
     }
-
-    h1 {
+    h2 {
       text-align: center;
       color: #cc6699;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
-
-    /* Стиль для аватарки */
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+      color: #666699;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #cc6699;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      border-color: #99ff99;
+      outline: none;
+    }
     .avatar-wrapper {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
-
-    .avatar {
+    .avatar-preview {
       width: 120px;
       height: 120px;
       border-radius: 50%;
@@ -45,15 +56,29 @@
       cursor: pointer;
       transition: 0.3s ease;
     }
-    .avatar:hover {
+    .avatar-preview:hover {
       opacity: 0.8;
     }
-
     input[type="file"] {
       display: none;
     }
-
-    /* Стиль для информационных блоков */
+    button {
+      width: 100%;
+      background-color: #cc6699;
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+      padding: 14px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(204, 102, 153, 0.4);
+      transition: background-color 0.3s ease;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #b0527d;
+    }
     .info-block {
       background-color: #fff0f5;
       border: 2px solid #cc6699;
@@ -64,110 +89,135 @@
       color: #666699;
       box-shadow: 0 3px 6px rgba(204, 102, 153, 0.2);
     }
-
-    /* Стиль для кнопок */
-    .btn {
-      width: 100%;
-      padding: 14px 0;
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 25px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-      color: white;
-      background: #cc6699;
-      box-shadow: 0 4px 15px rgba(204, 102, 153, 0.4);
-    }
-    .btn:hover {
-      background-color: #b0527d;
-    }
-    .btn-logout {
-      background: #666699;
-      box-shadow: 0 4px 15px rgba(102, 102, 153, 0.4);
-      margin-top: 10px;
-    }
-    .btn-logout:hover {
-      background-color: #4b4e7a;
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Личный кабинет</h1>
 
-    <!-- Аватарка с возможностью загрузки -->
+<div class="container">
+
+  <!-- Регистрация -->
+  <section id="register-section">
+    <h2>Регистрация</h2>
     <div class="avatar-wrapper">
       <label for="avatar-input">
-        <img src="default-avatar.png" alt="Аватар пользователя" class="avatar" id="avatarPreview" />
+        <img src="default-avatar.png" alt="Аватар" class="avatar-preview" id="avatarPreview" />
       </label>
       <input type="file" id="avatar-input" accept="image/*" />
     </div>
+    <label for="name-input">Имя</label>
+    <input type="text" id="name-input" placeholder="Введите имя" required />
+    <label for="phone-input">Номер телефона</label>
+    <input type="tel" id="phone-input" placeholder="+7 999 999-99-99" required />
+    <label for="telegram-input">Telegram ID</label>
+    <input type="text" id="telegram-input" placeholder="Ваш Telegram ID" required />
+    <button id="register-btn">Зарегистрироваться</button>
+  </section>
 
-    <!-- Информационные блоки -->
-    <div class="info-block" id="userNameBlock">Имя: —</div>
-    <div class="info-block" id="userPhoneBlock">Номер телефона: —</div>
-    <div class="info-block" id="userTelegramBlock">Telegram ID: —</div>
-    <div class="info-block" id="userRatingBlock">Рейтинг: 0</div>
+  <!-- Личный кабинет -->
+  <section id="profile-section" style="display:none;">
+    <h2>Личный кабинет</h2>
+    <div style="text-align:center; margin-bottom:20px;">
+      <img src="default-avatar.png" alt="Аватар" class="avatar-preview" id="profileAvatar" style="cursor:default;" />
+    </div>
+    <div class="info-block" id="profileName">Имя: </div>
+    <div class="info-block" id="profilePhone">Номер телефона: </div>
+    <div class="info-block" id="profileTelegram">Telegram ID: </div>
+    <div class="info-block" id="profileRating">Рейтинг: 0</div>
+    <button id="logout-btn">Выйти из учётной записи</button>
+  </section>
 
-    <!-- Кнопки -->
-    <button class="btn btn-save" id="saveProfileBtn">Сохранить</button>
-    <button class="btn btn-logout" id="logoutBtn">Выйти из учётной записи</button>
-  </div>
+</div>
 
-  <script>
-    // Элементы страницы
-    const avatarInput = document.getElementById('avatar-input');
-    const avatarPreview = document.getElementById('avatarPreview');
+<script>
+  // Элементы
+  const registerSection = document.getElementById('register-section');
+  const profileSection = document.getElementById('profile-section');
 
-    // Превью аватарки при загрузке
-    avatarInput.addEventListener('change', () => {
-      const file = avatarInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          avatarPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+  const avatarInput = document.getElementById('avatar-input');
+  const avatarPreview = document.getElementById('avatarPreview');
 
-    // Здесь может быть загрузка данных пользователя из локального хранилища или сервера
-    function loadUserProfile() {
-      // пример загрузки из localStorage
-      const name = localStorage.getItem('userName') || '—';
-      const phone = localStorage.getItem('userPhone') || '—';
-      const telegram = localStorage.getItem('userTelegram') || '—';
-      const rating = localStorage.getItem('userRating') || 0;
-      const avatar = localStorage.getItem('userAvatar');
+  const registerBtn = document.getElementById('register-btn');
 
-      document.getElementById('userNameBlock').textContent = 'Имя: ' + name;
-      document.getElementById('userPhoneBlock').textContent = 'Номер телефона: ' + phone;
-      document.getElementById('userTelegramBlock').textContent = 'Telegram ID: ' + telegram;
-      document.getElementById('userRatingBlock').textContent = 'Рейтинг: ' + rating;
+  const profileAvatar = document.getElementById('profileAvatar');
+  const profileName = document.getElementById('profileName');
+  const profilePhone = document.getElementById('profilePhone');
+  const profileTelegram = document.getElementById('profileTelegram');
+  const profileRating = document.getElementById('profileRating');
+  const logoutBtn = document.getElementById('logout-btn');
 
-      if (avatar) {
-        avatarPreview.src = avatar;
-      }
+  // Загрузка аватарки для регистрации
+  avatarInput.addEventListener('change', () => {
+    const file = avatarInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => avatarPreview.src = e.target.result;
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Функция показать профиль с данными
+  function showProfile(data) {
+    registerSection.style.display = 'none';
+    profileSection.style.display = 'block';
+
+    profileAvatar.src = data.avatar || 'default-avatar.png';
+    profileName.textContent = 'Имя: ' + data.name;
+    profilePhone.textContent = 'Номер телефона: ' + data.phone;
+    profileTelegram.textContent = 'Telegram ID: ' + data.telegram;
+    profileRating.textContent = 'Рейтинг: ' + (data.rating || 0);
+  }
+
+  // Проверка есть ли данные пользователя в localStorage при загрузке
+  window.addEventListener('DOMContentLoaded', () => {
+    const userData = localStorage.getItem('userProfile');
+    if (userData) {
+      showProfile(JSON.parse(userData));
+    }
+  });
+
+  // Обработка регистрации
+  registerBtn.addEventListener('click', () => {
+    const name = document.getElementById('name-input').value.trim();
+    const phone = document.getElementById('phone-input').value.trim();
+    const telegram = document.getElementById('telegram-input').value.trim();
+    const avatar = avatarPreview.src;
+
+    if (!name || !phone || !telegram) {
+      alert('Пожалуйста, заполните все поля.');
+      return;
     }
 
-    // Сохранение (можно заменить на API-запрос)
-    document.getElementById('saveProfileBtn').addEventListener('click', () => {
-      // здесь добавить логику получения и проверки данных с форм, сейчас просто пример
-      alert('Профиль сохранён! (демо)');
-    });
+    // Сохраняем данные пользователя
+    const userProfile = {
+      name,
+      phone,
+      telegram,
+      avatar,
+      rating: 0
+    };
 
-    // Выход из учётной записи (сброс данных)
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      if(confirm('Вы действительно хотите выйти?')) {
-        localStorage.clear();
-        location.reload();
-      }
-    });
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
 
-    // Загрузка данных при открытии страницы
-    window.onload = loadUserProfile;
-  </script>
+    // Переходим в личный кабинет
+    showProfile(userProfile);
+  });
+
+  // Выход из учётной записи
+  logoutBtn.addEventListener('click', () => {
+    if(confirm('Вы действительно хотите выйти?')) {
+      localStorage.removeItem('userProfile');
+      profileSection.style.display = 'none';
+      registerSection.style.display = 'block';
+
+      // Сброс формы и аватарки
+      avatarPreview.src = 'default-avatar.png';
+      document.getElementById('name-input').value = '';
+      document.getElementById('phone-input').value = '';
+      document.getElementById('telegram-input').value = '';
+    }
+  });
+</script>
+
 </body>
 </html>
+
