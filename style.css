@@ -8,57 +8,38 @@
   --color-text: #4a2a3a;
 }
 
-/* Базовые стили */
 body {
   margin: 0;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #fff0f5;
+  color: #333;
 }
 
-/* Хедер */
-header {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  background-color: var(--color-white);
-  box-shadow: 0 2px 5px rgba(204, 102, 153, 0.3);
-  position: relative;
-  z-index: 1001;
-}
-
-.logo {
-  margin-left: 1rem;
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: var(--color-pink-dark);
-}
-
-/* Бургер-кнопка */
+/* Бургер */
 .burger-menu {
   font-size: 2rem;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   top: 1rem;
   left: 1rem;
   z-index: 1001;
-  color: #ffccff;
+  color: #cc6699;
 }
 
-/* Боковая панель */
+/* Панель */
 .side-panel {
   position: fixed;
   top: 0;
-  left: -250px; /* скрыта */
+  left: -260px;
   width: 250px;
   height: 100%;
-  background-color: #fff0f5;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  background-color: #fffafc;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  transition: left 0.3s ease;
+  gap: 1rem;
+  transition: left 0.3s ease-in-out;
   z-index: 1000;
 }
 
@@ -68,69 +49,50 @@ header {
 
 .side-panel button {
   background-color: #ffccff;
-  color: #333;
   border: none;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  cursor: pointer;
+  padding: 0.8rem;
+  border-radius: 8px;
   text-align: left;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
 }
 
 .side-panel button:hover {
-  background-color: #f0bce5;
+  background-color: #f4b9dd;
 }
 
-/* Оверлей */
-.overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
+/* Центровка и кнопки */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
 }
 
-.overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
+h1 {
+  margin-bottom: 40px;
+  color: #cc6699;
 }
 
-/* Главный контент */
-.main-content {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  text-align: center;
-}
-
-/* Вертикальное расположение кнопок */
-.buttons-column {
+.button-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  margin-top: 2rem;
 }
 
-.btn {
-  background-color: var(--color-pink-light);
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(204, 102, 153, 0.4);
-  transition: background-color 0.3s ease;
-  color: var(--color-pink-dark);
-  min-width: 140px;
+.main-button {
+  background-color: #ffe0f0;
+  color: #333;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
 }
 
-.btn:hover {
-  background-color: var(--color-pink-medium);
-  color: var(--color-white);
+.main-button:hover {
+  background-color: #ffccff;
 }
-
-
