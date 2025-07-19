@@ -7,27 +7,19 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Бургер-меню -->
-  <header>
-    <button id="burger-btn" aria-label="Открыть меню" class="burger-btn">
-      &#9776;
-    </button>
-    <h1 class="logo">Малориса</h1>
-  </header>
-
-  <!-- Боковая панель -->
-  <nav id="side-panel" class="side-panel hidden">
-    <button id="close-panel" aria-label="Закрыть меню" class="close-panel">&times;</button>
-    <ul>
-      <li><a href="profile.html">Личный кабинет</a></li>
-      <li><a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">Сайт Малориса</a></li>
-      <li><button id="contacts-btn" class="link-button">Контакты</button></li>
-    </ul>
-  </nav>
-
+ <!-- Бургер-кнопка -->
+<div class="burger-menu" onclick="toggleMenu()">
+  ☰
+</div>
+<!-- Боковая панель -->
+<div class="side-panel" id="sidePanel">
+  <button onclick="location.href='profile.html'">Личный кабинет</button>
+  <button onclick="location.href='about.html'">О нас</button>
+  <button onclick="window.open('https://malorisa.com', '_blank')">Сайт Малориса</button>
+  <button onclick="location.href='contacts.html'">Контакты</button>
+</div>
   <!-- Полупрозрачный фон при открытом меню -->
   <div id="overlay" class="overlay hidden"></div>
-
   <!-- Главный контент -->
   <main class="main-content">
     <h2>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h2>
@@ -38,7 +30,6 @@
       С меню нашего заведения вы можете ознакомиться по ссылке:
       <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
     </p>
-
     <div class="buttons-column">
   <button class="btn btn-hot" onclick="location.href='hot-kitchen.html'">Горячий цех</button>
   <button class="btn btn-cold" onclick="location.href='cold-kitchen.html'">Холодный цех</button>
