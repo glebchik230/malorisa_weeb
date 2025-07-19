@@ -1,37 +1,53 @@
-document.getElementById("open-profile").addEventListener("click", () => {
-  document.getElementById("profile-panel").classList.add("show");
-});
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("registration-form");
+  const nameInput = document.getElementById("name");
+  const phoneInput = document.getElementById("phone");
+  const tgIdInput = document.getElementById("tgId");
+  const errorMsg = document.getElementById("error-msg");
+  const mainContent = document.getElementById("main-content");
+  const profileSection = document.getElementById("profile-section");
+  const profileName = document.getElementById("profile-name");
+  const profilePhone = document.getElementById("profile-phone");
+  const profileTgId = document.getElementById("profile-tgid");
+  const returnBtn = document.getElementById("return-btn");
+  const openProfileBtn = document.getElementById("open-profile");
 
-document.getElementById("close-profile").addEventListener("click", () => {
-  document.getElementById("profile-panel").classList.remove("show");
-});
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-document.getElementById("registration-form").addEventListener("submit", function (e) {
-  e.preventDefault();
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const tgId = tgIdInput.value.trim();
 
-  const name = document.getElementById("name");
-  const phone = document.getElementById("phone");
-  const telegramId = document.getElementById("telegram-id");
-  const message = document.getElementById("message");
+    if (!name  !phone  !tgId) {
+      errorMsg.textContent = "Пожалуйста, заполните все поля.";
+      errorMsg.style.display = "block";
 
-  let valid = true;
-  [name, phone, telegramId].forEach((field) => {
-    if (!field.value.trim()) {
-      field.classList.add("error");
-      valid = false;
-    } else {
-      field.classList.remove("error");
+      [nameInput, phoneInput, tgIdInput].forEach((input) => {
+        input.classList.toggle("border-red-500", !input.value.trim());
+      });
+
+      return;
     }
+
+    errorMsg.style.display = "none";
+
+    profileName.textContent = name;
+    profilePhone.textContent = phone;
+    profileTgId.textContent = tgId;
+
+    mainContent.classList.add("hidden");
+    profileSection.classList.remove("hidden");
+
+    // В этом месте можно отправить данные администратору
   });
 
-  if (!valid) {
-    message.textContent = "Пожалуйста, заполните все поля!";
-    message.style.color = "red";
-    return;
-  }
+  returnBtn.addEventListener("click", function () {
+    profileSection.classList.add("hidden");
+    mainContent.classList.remove("hidden");
+  });
 
-  message.textContent = "Успешная регистрация!";
-  message.style.color = "limegreen";
-
-  // Здесь можно отправить данные в Telegram-бота через API
+  openProfileBtn.addEventListener("click", function () {
+    mainContent.scrollIntoView({ behavior: "smooth" });
+  });
 });
