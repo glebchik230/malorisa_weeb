@@ -1,107 +1,227 @@
+/* Основные цвета из палитры */
+:root {
+  --color-1: #666699;
+  --color-2: #cc6699;
+  --color-3: #99ff99;
+  --color-4: #ffccff;
+  --bg-color: #1a1a2e;
+  --text-color: #eee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #202124;
-  color: #f1f1f1;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
 }
 
-.main-screen {
+header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 20px;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--color-1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.main-button, .top-right-button {
-  padding: 10px 20px;
+.btn {
+  background: var(--color-2);
   border: none;
-  border-radius: 12px;
-  background-color: #3b3f46;
-  color: #fff;
-  font-size: 18px;
+  border-radius: 5px;
+  color: var(--text-color);
+  padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
-.main-button:hover, .top-right-button:hover {
-  background-color: #565a63;
+.btn:hover {
+  background: var(--color-3);
+  color: #111;
 }
 
-.top-right-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.btn-main, .btn-profile {
+  min-width: 130px;
 }
 
+main.screen {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-4);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.buttons-row .btn {
+  min-width: 140px;
+  font-size: 1.1rem;
+}
+
+/* Popup базовый стиль */
 .popup {
   position: fixed;
-  width: 90%;
-  max-width: 500px;
-  background: #2c2f36;
-  border-radius: 16px;
-  box-shadow: 0 0 10px #000;
-  padding: 20px;
-  z-index: 1000;
-  transition: transform 0.4s ease;
+  background: var(--bg-color);
+  color: var(--text-color);
+  box-shadow: 0 0 15px rgba(0,0,0,0.9);
+  padding: 1.5rem 2rem;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.popup-content {
-  position: relative;
-}
-
-.close {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.from-top {
-  top: -100%;
+/* Позиционирование всплывающих окон */
+.top-popup {
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
+  animation: slideDown 0.3s ease forwards;
 }
-.from-bottom {
-  bottom: -100%;
+
+.bottom-popup {
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
+  animation: slideUp 0.3s ease forwards;
 }
-.from-left {
+
+.right-popup {
   top: 50%;
-  left: -100%;
+  right: 5%;
   transform: translateY(-50%);
-}
-
-.popup.show.from-top {
-  top: 50px;
-}
-.popup.show.from-bottom {
-  bottom: 50px;
-}
-.popup.show.from-left {
-  left: 20px;
-}
-
-.profile-panel {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 300px;
-  height: 100%;
-  background: #292c33;
-  padding: 20px;
-  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
-  transition: left 0.4s ease;
-  z-index: 1100;
-}
-
-.profile-panel.show {
-  left: 0;
+  animation: slideLeft 0.3s ease forwards;
 }
 
 .hidden {
+  display: none !important;
+}
+
+/* Закрывающая кнопка */
+.close-btn {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--color-2);
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 5px;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: var(--color-3);
+}
+
+/* Анимации */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20%); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(20%); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateY(-50%) translateX(20%); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+/* Личный кабинет */
+#profile {
+  max-width: 500px;
+  margin: 50px auto;
+  background: var(--color-1);
+  padding: 2rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+#profile h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+#profile-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+#profile-form input[type="text"],
+#profile-form input[type="tel"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+  background-color: #222;
+  color: var(--text-color);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.btn-submit {
+  background-color: var(--color-3);
+  color: #111;
+  font-weight: 700;
+}
+
+.btn-logout {
+  background-color: var(--color-4);
+  color: #111;
+  font-weight: 700;
+}
+
+/* Активный экран */
+.screen.active {
+  display: block;
+}
+
+.screen {
   display: none;
 }
