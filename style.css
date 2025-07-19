@@ -6,6 +6,11 @@ body {
   color: #333;
   min-height: 100vh;
 }
+h1 {
+  font-size: 36px;   /* размер шрифта */
+  color: #cc6699;    /* цвет текста */
+  text-align: center; /* выравнивание по центру */
+}
 /* Основной текст на главном экране */
 .main-description {
   max-width: 600px;       /* Ограничиваем ширину текста */
