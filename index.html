@@ -35,7 +35,12 @@
   <button class="btn btn-cold" onclick="location.href='cold-kitchen.html'">Холодный цех</button>
   <button class="btn btn-operators" onclick="location.href='operators.html'">Операторы</button>
 </div>
-  <script src="script.js"></script>
+  <script>
+  function toggleMenu() {
+    const panel = document.getElementById('sidePanel');
+    panel.classList.toggle('open');
+  }
+</script>
 </body>
 </html>
 
