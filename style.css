@@ -1,184 +1,147 @@
-/* Цвета из палитры */
+/* Цвета */
 :root {
-  --color-primary: #666699;
-  --color-secondary: #cc6699;
-  --color-accent: #99ff99;
-  --color-light: #ffccff;
-  --color-bg: #1a1a2e;
-  --color-text: #f0f0f5;
+  --color-bg: #fff0f5;
+  --color-white: #ffffff;
+  --color-pink-light: #ffd1dc;
+  --color-pink-medium: #ffb3c6;
+  --color-pink-dark: #cc6699;
+  --color-text: #4a2a3a;
 }
 
+/* Базовые стили */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-a {
-  color: var(--color-accent);
-  text-decoration: none;
-}
-
+/* Хедер */
 header {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 10px 20px;
-  background-color: var(--color-primary);
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--color-white);
+  box-shadow: 0 2px 5px rgba(204, 102, 153, 0.3);
+  position: relative;
+  z-index: 1001;
 }
 
-.btn {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.logo {
+  margin-left: 1rem;
   font-weight: bold;
-  transition: background-color 0.3s ease;
-  color: var(--color-text);
+  font-size: 1.5rem;
+  color: var(--color-pink-dark);
 }
 
-.btn:hover {
-  opacity: 0.9;
+/* Бургер кнопка */
+.burger-btn {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-pink-dark);
 }
 
-.btn-main {
-  background-color: var(--color-secondary);
-}
-
-.btn-profile {
-  background-color: var(--color-accent);
-  color: #000;
-}
-
-.btn-submit {
-  background-color: var(--color-secondary);
-  color: var(--color-text);
-  margin-top: 10px;
-}
-
-.btn-submit:hover {
-  background-color: var(--color-light);
-  color: #000;
-}
-
-.btn-hot {
-  background-color: #ff6f61;
-  color: white;
-  margin: 10px;
-}
-
-.btn-cold {
-  background-color: #4db6ac;
-  color: white;
-  margin: 10px;
-}
-
-.btn-operators {
-  background-color: #fbc02d;
-  color: #000;
-  margin: 10px;
-}
-
-.btn-logout {
-  background-color: var(--color-secondary);
-  color: var(--color-text);
-  margin-top: 20px;
-}
-
-.screen {
-  padding: 20px;
-}
-
-.active {
-  display: block;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* Popup стили */
-.popup {
+/* Сайд панель */
+.side-panel {
   position: fixed;
-  background-color: var(--color-primary);
-  color: var(--color-text);
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.6);
-  overflow-y: auto;
-  max-height: 80vh;
+  top: 0; left: 0;
+  width: 260px;
+  height: 100%;
+  background-color: var(--color-white);
+  box-shadow: 2px 0 5px rgba(204, 102, 153, 0.4);
+  padding: 2rem 1.5rem;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1002;
+}
+
+.side-panel.visible {
+  transform: translateX(0);
+}
+
+.side-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-panel ul li {
+  margin-bottom: 1.5rem;
+}
+
+.side-panel a, .link-button {
+  color: var(--color-pink-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.close-panel {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-pink-dark);
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+}
+
+/* Оверлей */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
   z-index: 1000;
 }
 
-.top-popup {
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+.overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.bottom-popup {
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.right-popup {
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-}
-
-.close-btn {
-  position: absolute;
-  top: 6px;
-  right: 12px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: var(--color-light);
-  cursor: pointer;
-}
-
-.buttons-row {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-/* Форма регистрации */
-.register-form label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-.register-form input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-#register-success {
-  margin-top: 20px;
-  font-weight: bold;
-  color: var(--color-accent);
+/* Главный контент */
+.main-content {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
   text-align: center;
 }
 
-/* Профиль */
-#profile-content p {
-  margin: 10px 0;
+/* Кнопки */
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
-.profile-buttons {
-  margin-top: 20px;
-  display: flex;
-  gap: 15px;
-  justify-content: flex-start;
+.btn {
+  background-color: var(--color-pink-light);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(204, 102, 153, 0.4);
+  transition: background-color 0.3s ease;
+  color: var(--color-pink-dark);
+  min-width: 140px;
 }
+
+.btn:hover {
+  background-color: var(--color-pink-medium);
+  color: var(--color-white);
+}
+
 
