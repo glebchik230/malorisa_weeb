@@ -3,28 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Малориса — Обучающее приложение</title>
+  <title>Малориса — Главный экран</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Бургер-меню -->
   <header>
-    <a href="profile.html" class="btn btn-profile">Личный кабинет</a>
+    <button id="burger-btn" aria-label="Открыть меню" class="burger-btn">
+      &#9776;
+    </button>
+    <h1 class="logo">Малориса</h1>
   </header>
 
-  <main class="screen active">
-    <h1>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
+  <!-- Боковая панель -->
+  <nav id="side-panel" class="side-panel hidden">
+    <button id="close-panel" aria-label="Закрыть меню" class="close-panel">&times;</button>
+    <ul>
+      <li><a href="profile.html">Личный кабинет</a></li>
+      <li><a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">Сайт Малориса</a></li>
+      <li><button id="contacts-btn" class="link-button">Контакты</button></li>
+    </ul>
+  </nav>
+
+  <!-- Полупрозрачный фон при открытом меню -->
+  <div id="overlay" class="overlay hidden"></div>
+
+  <!-- Главный контент -->
+  <main class="main-content">
+    <h2>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h2>
     <p>
       Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
-      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей
-      будущей должностью и обязанностями. С меню нашего заведения вы можете ознакомиться по ссылке:
+      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.
+      Тест связан с вашей будущей должностью и обязанностями.
+      С меню нашего заведения вы можете ознакомиться по ссылке:
       <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
     </p>
+
     <div class="buttons-row">
-      <a href="hot-kitchen.html" class="btn btn-hot">Горячий цех</a>
-      <a href="cold-kitchen.html" class="btn btn-cold">Холодный цех</a>
-      <a href="operators.html" class="btn btn-operators">Операторы колл-центра</a>
+      <button class="btn btn-hot" onclick="location.href='hot-kitchen.html'">Горячий цех</button>
+      <button class="btn btn-cold" onclick="location.href='cold-kitchen.html'">Холодный цех</button>
+      <button class="btn btn-operators" onclick="location.href='operators.html'">Операторы</button>
     </div>
   </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
 
