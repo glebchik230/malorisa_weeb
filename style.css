@@ -7,7 +7,7 @@ body {
   min-height: 100vh;
 }
 h1 {
-  font-size: 25px;   /* размер шрифта */
+  font-size: 22px;   /* размер шрифта */
   color: #cc6699;    /* цвет текста */
   text-align: center; /* выравнивание по центру */
 }
