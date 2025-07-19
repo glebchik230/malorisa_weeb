@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <button id="profileBtn" 
-        class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">
-  Личный кабинет
-</button>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malorisa App</title>
-  <style>
-    body {
-      background-color: #1e1e1e;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
-    h1 {
-      color: #ccc;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Малориса</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="sidebar" id="profileSidebar">
-  <button id="closeSidebar">&larr; Назад</button>
-  <h2>Личный кабинет</h2>
-  <p><strong>Имя:</strong> Иван</p>
-  <p><strong>Email:</strong> ivan@example.com</p>
-  <p><strong>Телефон:</strong> +7 900 000 0000</p>
-  <hr />
-  <h3>Задачи</h3>
-  <ul>
-    <li>✅ Выполнено: 4</li>
-    <li>🕒 Новые: 2</li>
-  </ul>
-  <h3>Пройдено тестов: 3</h3>
-</div>
+  <header class="header">
+    <button id="open-profile" class="profile-button">Личный кабинет</button>
+  </header>
+
+  <main class="main-content">
+    <h1>Добро пожаловать в Малорису!</h1>
+    <p>
+      Здравствуйте! Мы — онлайн-ресторан «Малориса». Рады приветствовать вас в нашем приложении.
+      Если вы здесь, значит, скоро станете частью нашей команды. Пожалуйста, зарегистрируйтесь,
+      пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей будущей должностью
+      и обязанностями.
+    </p>
+    <p>
+      С меню нашего заведения вы можете ознакомиться по ссылке:
+      <a href="https://malorisa.ru/" target="_blank">https://malorisa.ru/</a>
+    </p>
+  </main>
+
+  <aside id="profile-panel" class="profile-panel hidden">
+    <button id="close-profile" class="close-button">Вернуться на главный экран</button>
+    <h2>Регистрация</h2>
+    <form id="registration-form">
+      <input type="text" id="name" placeholder="Имя" required />
+      <input type="tel" id="phone" placeholder="Телефон" required />
+      <input type="text" id="telegram-id" placeholder="Telegram ID" required />
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+    <p id="message"></p>
+  </aside>
+
+  <script src="profile.js"></script>
 </body>
 </html>
