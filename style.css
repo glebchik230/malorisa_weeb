@@ -17,7 +17,7 @@ h1 {
 p {
  max-width: 80%; /* ← сделает текст уже */
   margin: 0 auto 30px auto; /* центрирует и добавляет отступ снизу */
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.5;
   color: #555;
 }
