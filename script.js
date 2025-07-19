@@ -1,104 +1,73 @@
 // Получаем элементы
 const mainScreen = document.getElementById('main-screen');
-const profileScreen = document.getElementById('profile');
+const profileSection = document.getElementById('profile');
+const registerForm = document.getElementById('register-form');
+const registerSuccess = document.getElementById('register-success');
+const toProfileBtn = document.getElementById('to-profile-btn');
 
 const btnMain = document.getElementById('btn-main');
 const btnProfile = document.getElementById('btn-profile');
 
-const hotPopup = document.getElementById('hot-kitchen');
-const coldPopup = document.getElementById('cold-kitchen');
-const operatorsPopup = document.getElementById('operators');
+const openHotBtn = document.getElementById('open-hot');
+const openColdBtn = document.getElementById('open-cold');
+const openOperatorsBtn = document.getElementById('open-operators');
 
-const btnOpenHot = document.getElementById('open-hot');
-const btnOpenCold = document.getElementById('open-cold');
-const btnOpenOperators = document.getElementById('open-operators');
+const hotKitchen = document.getElementById('hot-kitchen');
+const coldKitchen = document.getElementById('cold-kitchen');
+const operatorsPopup = document.getElementById('operators');
 
 const closeButtons = document.querySelectorAll('.close-btn');
 
-const profileForm = document.getElementById('profile-form');
-const profileInfo = document.getElementById('profile-info');
+const userNameSpan = document.getElementById('user-name');
+const userPhoneSpan = document.getElementById('user-phone');
+const userTelegramSpan = document.getElementById('user-telegram');
+const userRatingSpan = document.getElementById('user-rating');
+
 const logoutBtn = document.getElementById('logout-btn');
+const btnMainFromProfile = document.getElementById('btn-main-from-profile');
 
+let currentUser = null; // Объект пользователя
+
+// Функция показа экрана
 function showScreen(screen) {
-  mainScreen.classList.remove('active');
-  profileScreen.classList.remove('active');
-  hotPopup.classList.add('hidden');
-  coldPopup.classList.add('hidden');
-  operatorsPopup.classList.add('hidden');
-
-  screen.classList.add('active');
+  mainScreen.classList.add('hidden');
+  profileSection.classList.add('hidden');
+  screen.classList.remove('hidden');
 }
 
-function showPopup(popup) {
-  mainScreen.classList.remove('active');
-  profileScreen.classList.remove('active');
-  hotPopup.classList.add('hidden');
-  coldPopup.classList.add('hidden');
+// Закрыть все popup
+function closeAllPopups() {
+  hotKitchen.classList.add('hidden');
+  coldKitchen.classList.add('hidden');
   operatorsPopup.classList.add('hidden');
-
-  popup.classList.remove('hidden');
 }
 
-btnOpenHot.addEventListener('click', () => {
-  showPopup(hotPopup);
-});
-btnOpenCold.addEventListener('click', () => {
-  showPopup(coldPopup);
-});
-btnOpenOperators.addEventListener('click', () => {
-  showPopup(operatorsPopup);
-});
-
-closeButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.parentElement.classList.add('hidden');
-    showScreen(mainScreen);
-  });
-});
-
-btnMain.addEventListener('click', () => {
-  showScreen(mainScreen);
-});
-
-btnProfile.addEventListener('click', () => {
-  showScreen(profileScreen);
-});
-
-// Обработка формы личного кабинета (регистрация)
-profileForm.addEventListener('submit', (e) => {
+// Обработка регистрации
+registerForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // Простая проверка заполненности полей
-  const name = profileForm.name.value.trim();
-  const phone = profileForm.phone.value.trim();
-  const telegramId = profileForm.telegramId.value.trim();
-  const notifications = profileForm.notifications.checked;
+  const name = document.getElementById('reg-name').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const telegramId = document.getElementById('reg-telegramId').value.trim();
 
   if (!name || !phone || !telegramId) {
-    alert('Пожалуйста, заполните все поля!');
+    alert('Пожалуйста, заполните все поля');
     return;
   }
 
-  // Отображаем информацию в профиле
-  document.getElementById('user-name').textContent = name;
-  document.getElementById('user-phone').textContent = phone;
-  document.getElementById('user-telegram').textContent = telegramId;
-  document.getElementById('user-notifications').textContent = notifications ? 'Включены' : 'Выключены';
-  // Пример: статусы можно пока сделать нулём
-  document.getElementById('user-tasks').textContent = '0';
-  document.getElementById('user-tests').textContent = '0';
+  currentUser = {
+    name,
+    phone,
+    telegramId,
+    rating: 0, // Можно позже менять админом
+  };
 
-  // Скрываем форму, показываем инфо
-  profileForm.classList.add('hidden');
-  profileInfo.classList.remove('hidden');
+  registerForm.classList.add('hidden');
+  registerSuccess.classList.remove('hidden');
 });
 
-logoutBtn.addEventListener('click', () => {
-  // Возврат к форме
-  profileInfo.classList.add('hidden');
-  profileForm.classList.remove('hidden');
-  profileForm.reset();
+// Переход в профиль
+toProfileBtn.addEventListener('click', () => {
+  if (!currentUser) return alert('Сначала зарегистрируйтесь');
 
-  // Возврат на главный экран
-  showScreen(mainScreen);
-});
+  // Заполня
