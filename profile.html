@@ -1,118 +1,57 @@
-// profile.js
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Личный кабинет — Малориса</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="profile-container">
 
-const formSection = document.getElementById('profile-form-section');
-const viewSection = document.getElementById('profile-view-section');
+    <!-- Форма регистрации/редактирования -->
+    <section id="profile-form-section">
+      <h2>Регистрация / Редактирование профиля</h2>
+      <form id="profile-form" enctype="multipart/form-data">
+        <label>
+          Имя:<br />
+          <input type="text" id="name" name="name" required />
+        </label>
+        <label>
+          Номер телефона:<br />
+          <input type="tel" id="phone" name="phone" required />
+        </label>
+        <label>
+          Telegram ID:<br />
+          <input type="text" id="telegramId" name="telegramId" required />
+        </label>
+        <label>
+          Аватарка:<br />
+          <input type="file" id="avatar" name="avatar" accept="image/*" />
+        </label>
+        <button type="submit" class="btn btn-submit">Сохранить</button>
+      </form>
+    </section>
 
-const profileForm = document.getElementById('profile-form');
-const avatarInput = document.getElementById('avatar');
+    <!-- Просмотр профиля -->
+    <section id="profile-view-section" style="display:none;">
+      <h2>Ваш профиль</h2>
+      <div class="profile-info">
+        <img id="avatar-preview" src="" alt="Аватарка" class="avatar" />
+        <p><strong>Имя:</strong> <span id="display-name"></span></p>
+        <p><strong>Телефон:</strong> <span id="display-phone"></span></p>
+        <p><strong>Telegram ID:</strong> <span id="display-telegramId"></span></p>
+        <p><strong>Рейтинг сотрудника:</strong> <span id="employee-rating">★★★★☆</span></p>
+      </div>
+      <button id="edit-profile-btn" class="btn">Редактировать</button>
+      <button id="btn-home" class="btn">На главный экран</button>
+    </section>
 
-const displayName = document.getElementById('display-name');
-const displayPhone = document.getElementById('display-phone');
-const displayTelegramId = document.getElementById('display-telegramId');
-const avatarPreview = document.getElementById('avatar-preview');
-const ratingDisplay = document.getElementById('employee-rating');
+  </main>
 
-const editBtn = document.getElementById('edit-profile-btn');
-const btnHome = document.getElementById('btn-home');
+  <script src="profile.js"></script>
+</body>
+</html>
 
-// Функция сохранения данных в localStorage
-function saveProfile(data) {
-  localStorage.setItem('profileData', JSON.stringify(data));
-}
-
-// Функция загрузки данных из localStorage
-function loadProfile() {
-  const data = localStorage.getItem('profileData');
-  return data ? JSON.parse(data) : null;
-}
-
-// Отобразить данные профиля
-function showProfile(data) {
-  displayName.textContent = data.name;
-  displayPhone.textContent = data.phone;
-  displayTelegramId.textContent = data.telegramId;
-  ratingDisplay.textContent = data.rating || '★★★☆☆';
-
-  if (data.avatar) {
-    avatarPreview.src = data.avatar;
-  } else {
-    avatarPreview.src = 'default-avatar.png'; // можно добавить свой дефолтный аватар
-  }
-
-  formSection.style.display = 'none';
-  viewSection.style.display = 'block';
-}
-
-// Предзаполнить форму
-function fillForm(data) {
-  profileForm.name.value = data.name || '';
-  profileForm.phone.value = data.phone || '';
-  profileForm.telegramId.value = data.telegramId || '';
-  // Аватарка — оставить как есть, загрузка новая по желанию
-}
-
-// Конвертация выбранной аватарки в base64 для localStorage
-function readAvatarFile(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) resolve(null);
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-    reader.readAsDataURL(file);
-  });
-}
-
-// Обработка отправки формы
-profileForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = profileForm.name.value.trim();
-  const phone = profileForm.phone.value.trim();
-  const telegramId = profileForm.telegramId.value.trim();
-  const avatarFile = avatarInput.files[0];
-
-  if (!name || !phone || !telegramId) {
-    alert('Пожалуйста, заполните все обязательные поля!');
-    return;
-  }
-
-  const avatarBase64 = await readAvatarFile(avatarFile);
-
-  const profileData = {
-    name,
-    phone,
-    telegramId,
-    avatar: avatarBase64,
-    rating: '★★★★☆' // пример рейтинга, можно потом динамически менять
-  };
-
-  saveProfile(profileData);
-  showProfile(profileData);
-});
-
-// Обработка кнопки "Редактировать"
-editBtn.addEventListener('click', () => {
-  const data = loadProfile();
-  if (data) {
-    fillForm(data);
-  }
-  formSection.style.display = 'block';
-  viewSection.style.display = 'none';
-});
-
-// Кнопка "На главный экран"
-btnHome.addEventListener('click', () => {
-  window.location.href = 'index.html';
-});
-
-// При загрузке страницы показать профиль или форму
-window.addEventListener('DOMContentLoaded', () => {
-  const data = loadProfile();
-  if (data) {
-    showProfile(data);
-  } else {
-    formSection.style.display = 'block';
-    viewSection.style.display = 'none';
-  }
-});
 
 
