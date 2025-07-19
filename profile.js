@@ -5,19 +5,18 @@ const closeProfileBtn = document.getElementById("close-profile");
 const registerBtn = document.getElementById("register-btn");
 const registrationForm = document.getElementById("registration-form");
 const userInfo = document.getElementById("user-info");
-const mainContent = document.getElementById("main-content");
 
 // Открыть личный кабинет
 openProfileBtn.addEventListener("click", () => {
   profilePanel.classList.remove("translate-x-full");
 });
 
-// Вернуться на главный экран
+// Закрыть личный кабинет (вернуться на главный экран)
 closeProfileBtn.addEventListener("click", () => {
   profilePanel.classList.add("translate-x-full");
 });
 
-// Регистрация
+// Регистрация пользователя
 registerBtn.addEventListener("click", () => {
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
@@ -25,6 +24,7 @@ registerBtn.addEventListener("click", () => {
 
   let valid = true;
 
+  // Проверка на заполненность полей
   [nameInput, phoneInput, telegramInput].forEach((input) => {
     if (!input.value.trim()) {
       input.classList.add("border-red-500");
@@ -39,14 +39,14 @@ registerBtn.addEventListener("click", () => {
     return;
   }
 
-  // Регистрация прошла успешно
+  // Успешная регистрация
   registrationForm.classList.add("hidden");
   userInfo.classList.remove("hidden");
   userInfo.innerHTML = `
-    <h2 class="text-lg font-semibold mb-2">Добро пожаловать, ${nameInput.value}!</h2>
+    <h2 class="text-xl font-semibold mb-2">Добро пожаловать, ${nameInput.value}!</h2>
     <p>Номер телефона: ${phoneInput.value}</p>
     <p>Telegram ID: ${telegramInput.value}</p>
-    <p class="mt-4">📊 <strong>Статистика:</strong></p>
+    <p class="mt-4 font-semibold">Статистика:</p>
     <ul class="list-disc list-inside">
       <li>Выполненные задачи: 0</li>
       <li>Новые задачи: 0</li>
