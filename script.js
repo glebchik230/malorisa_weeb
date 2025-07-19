@@ -1,40 +1,104 @@
-document.getElementById('btn-hot').addEventListener('click', () => {
-  showPopup('popup-hot');
+// Получаем элементы
+const mainScreen = document.getElementById('main-screen');
+const profileScreen = document.getElementById('profile');
+
+const btnMain = document.getElementById('btn-main');
+const btnProfile = document.getElementById('btn-profile');
+
+const hotPopup = document.getElementById('hot-kitchen');
+const coldPopup = document.getElementById('cold-kitchen');
+const operatorsPopup = document.getElementById('operators');
+
+const btnOpenHot = document.getElementById('open-hot');
+const btnOpenCold = document.getElementById('open-cold');
+const btnOpenOperators = document.getElementById('open-operators');
+
+const closeButtons = document.querySelectorAll('.close-btn');
+
+const profileForm = document.getElementById('profile-form');
+const profileInfo = document.getElementById('profile-info');
+const logoutBtn = document.getElementById('logout-btn');
+
+function showScreen(screen) {
+  mainScreen.classList.remove('active');
+  profileScreen.classList.remove('active');
+  hotPopup.classList.add('hidden');
+  coldPopup.classList.add('hidden');
+  operatorsPopup.classList.add('hidden');
+
+  screen.classList.add('active');
+}
+
+function showPopup(popup) {
+  mainScreen.classList.remove('active');
+  profileScreen.classList.remove('active');
+  hotPopup.classList.add('hidden');
+  coldPopup.classList.add('hidden');
+  operatorsPopup.classList.add('hidden');
+
+  popup.classList.remove('hidden');
+}
+
+btnOpenHot.addEventListener('click', () => {
+  showPopup(hotPopup);
+});
+btnOpenCold.addEventListener('click', () => {
+  showPopup(coldPopup);
+});
+btnOpenOperators.addEventListener('click', () => {
+  showPopup(operatorsPopup);
 });
 
-document.getElementById('btn-cold').addEventListener('click', () => {
-  showPopup('popup-cold');
+closeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.parentElement.classList.add('hidden');
+    showScreen(mainScreen);
+  });
 });
 
-document.getElementById('btn-operator').addEventListener('click', () => {
-  showPopup('popup-operator');
+btnMain.addEventListener('click', () => {
+  showScreen(mainScreen);
 });
 
-document.getElementById('btn-profile').addEventListener('click', () => {
-  document.getElementById('profile-panel').classList.add('show');
+btnProfile.addEventListener('click', () => {
+  showScreen(profileScreen);
 });
 
-document.getElementById('profile-form').addEventListener('submit', (e) => {
+// Обработка формы личного кабинета (регистрация)
+profileForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  document.getElementById('profile-form').classList.add('hidden');
-  document.getElementById('profile-info').classList.remove('hidden');
+
+  // Простая проверка заполненности полей
+  const name = profileForm.name.value.trim();
+  const phone = profileForm.phone.value.trim();
+  const telegramId = profileForm.telegramId.value.trim();
+  const notifications = profileForm.notifications.checked;
+
+  if (!name || !phone || !telegramId) {
+    alert('Пожалуйста, заполните все поля!');
+    return;
+  }
+
+  // Отображаем информацию в профиле
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-phone').textContent = phone;
+  document.getElementById('user-telegram').textContent = telegramId;
+  document.getElementById('user-notifications').textContent = notifications ? 'Включены' : 'Выключены';
+  // Пример: статусы можно пока сделать нулём
+  document.getElementById('user-tasks').textContent = '0';
+  document.getElementById('user-tests').textContent = '0';
+
+  // Скрываем форму, показываем инфо
+  profileForm.classList.add('hidden');
+  profileInfo.classList.remove('hidden');
 });
 
-function showPopup(id) {
-  document.getElementById(id).classList.add('show');
-}
+logoutBtn.addEventListener('click', () => {
+  // Возврат к форме
+  profileInfo.classList.add('hidden');
+  profileForm.classList.remove('hidden');
+  profileForm.reset();
 
-function closePopup(id) {
-  document.getElementById(id).classList.remove('show');
-}
-
-function logout() {
-  document.getElementById('profile-info').classList.add('hidden');
-  document.getElementById('profile-form').classList.remove('hidden');
-  document.getElementById('profile-panel').classList.remove('show');
-}
-
-function goHome() {
-  document.getElementById('profile-panel').classList.remove('show');
-}
-
+  // Возврат на главный экран
+  showScreen(mainScreen);
+});
