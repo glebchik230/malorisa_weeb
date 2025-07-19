@@ -3,64 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Личный кабинет - Malorisa</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Личный кабинет — Малориса</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .hidden { display: none; }
+  </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <div class="max-w-md mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4 text-center">Личный кабинет</h1>
+<body>
+  <main>
+    <section id="registration-form">
+      <h2>Регистрация</h2>
+      <form id="registerForm">
+        <label>Имя: <input type="text" id="name" required></label><br />
+        <label>Телефон: <input type="tel" id="phone" required></label><br />
+        <label>Telegram ID: <input type="text" id="telegramId" required></label><br />
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+    </section>
 
-    <form id="profileForm" class="space-y-4">
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-300">Имя</label>
-        <input type="text" id="name" name="name" class="mt-1 block w-full bg-gray-800 border border-gray-600 rounded-md p-2 text-white" />
-      </div>
-      <div>
-        <label for="phone" class="block text-sm font-medium text-gray-300">Телефон</label>
-        <input type="text" id="phone" name="phone" class="mt-1 block w-full bg-gray-800 border border-gray-600 rounded-md p-2 text-white" />
-      </div>
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-        <input type="email" id="email" name="email" class="mt-1 block w-full bg-gray-800 border border-gray-600 rounded-md p-2 text-white" />
-      </div>
-      <div class="flex items-center">
-        <input type="checkbox" id="notifications" name="notifications" class="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded" />
-        <label for="notifications" class="ml-2 block text-sm text-gray-300">Получать уведомления</label>
-      </div>
-      <div>
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md">
-          Сохранить
-        </button>
-      </div>
-    </form>
+    <section id="success-message" class="hidden">
+      <h3>Регистрация прошла успешно!</h3>
+      <button onclick="showProfile()">Перейти в личный кабинет</button>
+    </section>
 
-    <div id="status" class="mt-4 text-sm text-green-400 hidden">Данные сохранены!</div>
-  </div>
+    <section id="user-profile" class="hidden">
+      <h2>Личный кабинет</h2>
+      <p><strong>Имя:</strong> <span id="displayName"></span></p>
+      <p><strong>Telegram ID:</strong> <span id="displayTelegramId"></span></p>
+      <p><strong>Рейтинг:</strong> <span id="rating">5.0 ★</span></p>
+      <button onclick="logout()">Выйти из учётной записи</button>
+      <a href="index.html" class="btn">На главный экран</a>
+    </section>
+  </main>
 
   <script>
-    const form = document.getElementById('profileForm');
-    const statusDiv = document.getElementById('status');
+    const form = document.getElementById('registerForm');
+    const regFormSection = document.getElementById('registration-form');
+    const successSection = document.getElementById('success-message');
+    const profileSection = document.getElementById('user-profile');
 
-    // Загружаем данные из localStorage при открытии страницы
-    const savedData = JSON.parse(localStorage.getItem('malorisaUserProfile')) || {};
-    form.name.value = savedData.name || '';
-    form.phone.value = savedData.phone || '';
-    form.email.value = savedData.email || '';
-    form.notifications.checked = savedData.notifications || false;
-
-    // Обработчик отправки формы
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      const data = {
-        name: form.name.value,
-        phone: form.phone.value,
-        email: form.email.value,
-        notifications: form.notifications.checked,
-      };
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const telegramId = document.getElementById('telegramId').value;
 
-      localStorage.setItem('malorisaUserProfile', JSON.stringify(data));
-      statusDiv.classList.remove('hidden');
-      setTimeout(() => statusDiv.classList.add('hidden'), 3000);
+      // Простое сохранение в памяти
+      localStorage.setItem('name', name);
+      localStorage.setItem('phone', phone);
+      localStorage.setItem('telegramId', telegramId);
+
+      regFormSection.classList.add('hidden');
+      successSection.classList.remove('hidden');
+    });
+
+    function showProfile() {
+      successSection.classList.add('hidden');
+      profileSection.classList.remove('hidden');
+
+      document.getElementById('displayName').textContent = localStorage.getItem('name');
+      document.getElementById('displayTelegramId').textContent = localStorage.getItem('telegramId');
+    }
+
+    function logout() {
+      localStorage.clear();
+      location.reload();
+    }
+
+    // Автопереход если уже зарегистрирован
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('name')) {
+        regFormSection.classList.add('hidden');
+        successSection.classList.add('hidden');
+        profileSection.classList.remove('hidden');
+        showProfile();
+      }
     });
   </script>
 </body>
