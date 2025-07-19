@@ -1,53 +1,58 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("registration-form");
+// Получаем элементы
+const profilePanel = document.getElementById("profile-panel");
+const openProfileBtn = document.getElementById("open-profile");
+const closeProfileBtn = document.getElementById("close-profile");
+const registerBtn = document.getElementById("register-btn");
+const registrationForm = document.getElementById("registration-form");
+const userInfo = document.getElementById("user-info");
+const mainContent = document.getElementById("main-content");
+
+// Открыть личный кабинет
+openProfileBtn.addEventListener("click", () => {
+  profilePanel.classList.remove("translate-x-full");
+});
+
+// Вернуться на главный экран
+closeProfileBtn.addEventListener("click", () => {
+  profilePanel.classList.add("translate-x-full");
+});
+
+// Регистрация
+registerBtn.addEventListener("click", () => {
   const nameInput = document.getElementById("name");
   const phoneInput = document.getElementById("phone");
-  const tgIdInput = document.getElementById("tgId");
-  const errorMsg = document.getElementById("error-msg");
-  const mainContent = document.getElementById("main-content");
-  const profileSection = document.getElementById("profile-section");
-  const profileName = document.getElementById("profile-name");
-  const profilePhone = document.getElementById("profile-phone");
-  const profileTgId = document.getElementById("profile-tgid");
-  const returnBtn = document.getElementById("return-btn");
-  const openProfileBtn = document.getElementById("open-profile");
+  const telegramInput = document.getElementById("telegram");
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  let valid = true;
 
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    const tgId = tgIdInput.value.trim();
-
-    if (!name  !phone  !tgId) {
-      errorMsg.textContent = "Пожалуйста, заполните все поля.";
-      errorMsg.style.display = "block";
-
-      [nameInput, phoneInput, tgIdInput].forEach((input) => {
-        input.classList.toggle("border-red-500", !input.value.trim());
-      });
-
-      return;
+  [nameInput, phoneInput, telegramInput].forEach((input) => {
+    if (!input.value.trim()) {
+      input.classList.add("border-red-500");
+      valid = false;
+    } else {
+      input.classList.remove("border-red-500");
     }
-
-    errorMsg.style.display = "none";
-
-    profileName.textContent = name;
-    profilePhone.textContent = phone;
-    profileTgId.textContent = tgId;
-
-    mainContent.classList.add("hidden");
-    profileSection.classList.remove("hidden");
-
-    // В этом месте можно отправить данные администратору
   });
 
-  returnBtn.addEventListener("click", function () {
-    profileSection.classList.add("hidden");
-    mainContent.classList.remove("hidden");
-  });
+  if (!valid) {
+    alert("Пожалуйста, заполните все поля.");
+    return;
+  }
 
-  openProfileBtn.addEventListener("click", function () {
-    mainContent.scrollIntoView({ behavior: "smooth" });
-  });
+  // Регистрация прошла успешно
+  registrationForm.classList.add("hidden");
+  userInfo.classList.remove("hidden");
+  userInfo.innerHTML = `
+    <h2 class="text-lg font-semibold mb-2">Добро пожаловать, ${nameInput.value}!</h2>
+    <p>Номер телефона: ${phoneInput.value}</p>
+    <p>Telegram ID: ${telegramInput.value}</p>
+    <p class="mt-4">📊 <strong>Статистика:</strong></p>
+    <ul class="list-disc list-inside">
+      <li>Выполненные задачи: 0</li>
+      <li>Новые задачи: 0</li>
+      <li>Пройдено тестов: 0</li>
+    </ul>
+  `;
+
+  alert("Регистрация прошла успешно!");
 });
