@@ -33,3 +33,28 @@ input {
   border: none;
   border-radius: 5px;
 }
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 320px;
+  height: 100%;
+  background: #2c2c2c;
+  padding: 1rem;
+  box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
