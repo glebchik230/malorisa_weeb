@@ -2,45 +2,51 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Малориса — Главный экран</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malorisa Web App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
- <!-- Бургер-кнопка -->
-<div class="burger-menu" onclick="toggleMenu()">
-  ☰
-</div>
-<!-- Боковая панель -->
-<div class="side-panel" id="sidePanel">
-  <button onclick="location.href='profile.html'">Личный кабинет</button>
-  <button onclick="location.href='about.html'">О нас</button>
-  <button onclick="window.open('https://malorisa.com', '_blank')">Сайт Малориса</button>
-  <button onclick="location.href='contacts.html'">Контакты</button>
-</div>
-  <!-- Полупрозрачный фон при открытом меню -->
-  <div id="overlay" class="overlay hidden"></div>
-  <!-- Главный контент -->
-  <main class="main-content">
-    <h2>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h2>
-    <p>
-      Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
-      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.
-      Тест связан с вашей будущей должностью и обязанностями.
-      С меню нашего заведения вы можете ознакомиться по ссылке:
-      <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
-    </p>
-    <div class="buttons-column">
-  <button class="btn btn-hot" onclick="location.href='hot-kitchen.html'">Горячий цех</button>
-  <button class="btn btn-cold" onclick="location.href='cold-kitchen.html'">Холодный цех</button>
-  <button class="btn btn-operators" onclick="location.href='operators.html'">Операторы</button>
-</div>
+
+  <!-- Бургер-кнопка -->
+  <div class="burger-menu" onclick="toggleMenu()">
+    ☰
+  </div>
+
+  <!-- Выдвижная панель -->
+  <div class="side-panel" id="sidePanel">
+    <button onclick="location.href='profile.html'">Личный кабинет</button>
+    <button onclick="location.href='about.html'">О нас</button>
+    <button onclick="window.open('https://malorisa.com', '_blank')">Сайт Малориса</button>
+    <button onclick="location.href='contacts.html'">Контакты</button>
+  </div>
+
+  <!-- Основной контент -->
+  <div class="main-container">
+    <h1>Добро пожаловать в Malorisa Web App</h1>
+
+    <div class="button-block">
+      <a href="hot-kitchen.html" class="main-button">Горячий цех</a>
+      <a href="cold-kitchen.html" class="main-button">Холодный цех</a>
+      <a href="operators.html" class="main-button">Операторы колл-центра</a>
+    </div>
+  </div>
+
   <script>
-  function toggleMenu() {
-    const panel = document.getElementById('sidePanel');
-    panel.classList.toggle('open');
-  }
-</script>
+    function toggleMenu() {
+      const panel = document.getElementById('sidePanel');
+      panel.classList.toggle('open');
+    }
+
+    // Закрытие панели при клике вне её
+    document.addEventListener('click', function (event) {
+      const panel = document.getElementById('sidePanel');
+      const burger = document.querySelector('.burger-menu');
+      if (!panel.contains(event.target) && !burger.contains(event.target)) {
+        panel.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
 
