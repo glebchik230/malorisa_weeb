@@ -55,7 +55,7 @@ a:hover {
 .sidebar {
   position: fixed;
   top: 0;
-  left: -260px; /* спрятана слева */
+  left: -270px; /* спрятана слева */
   width: 260px;
   height: 100%;
   background-color: #fff0f6; /* очень светло-розовый */
