@@ -1,98 +1,143 @@
-/* Цвета */
-:root {
-  --color-bg: #fff0f5;
-  --color-white: #ffffff;
-  --color-pink-light: #ffd1dc;
-  --color-pink-medium: #ffb3c6;
-  --color-pink-dark: #cc6699;
-  --color-text: #4a2a3a;
-}
-
+/* Общие стили */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fff0f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f0f7; /* нежный светло-розовый фон */
   color: #333;
+  min-height: 100vh;
 }
 
-/* Бургер */
-.burger-menu {
-  font-size: 2rem;
-  cursor: pointer;
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1001;
+/* Заголовок и параграф */
+h1 {
+  text-align: center;
+  margin-top: 60px;
   color: #cc6699;
 }
 
-/* Панель */
-.side-panel {
+p {
+  max-width: 600px;
+  margin: 10px auto 40px auto;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #555;
+}
+
+a {
+  color: #cc6699;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Бургер-кнопка */
+.burger {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1100;
+  cursor: pointer;
+  width: 30px;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.burger div {
+  background-color: #cc6699;
+  height: 4px;
+  border-radius: 2px;
+}
+
+/* Выдвижная панель */
+.sidebar {
   position: fixed;
   top: 0;
-  left: -260px;
-  width: 250px;
+  left: -260px; /* спрятана слева */
+  width: 260px;
   height: 100%;
-  background-color: #fffafc;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  padding: 2rem 1rem;
+  background-color: #fff0f6; /* очень светло-розовый */
+  box-shadow: 2px 0 12px rgba(204, 102, 153, 0.3);
+  padding: 30px 20px;
+  box-sizing: border-box;
+  transition: left 0.3s ease;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  transition: left 0.3s ease-in-out;
-  z-index: 1000;
+  gap: 20px;
 }
 
-.side-panel.open {
-  left: 0;
+.sidebar.active {
+  left: 0; /* выезжает при активном классе */
 }
 
-.side-panel button {
+.sidebar a {
+  color: #cc6699;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar a:hover {
+  background-color: #ffccff;
+}
+
+/* Кнопки на главном экране */
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-top: 50px;
+}
+
+.main-buttons a.btn {
+  background-color: #ffccff;
+  color: #660066;
+  padding: 14px 28px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(204, 102, 153, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-buttons a.btn:hover {
+  background-color: #cc6699;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(204, 102, 153, 0.6);
+}
+
+/* Хедер кнопки (если нужны) */
+header {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 1050;
+  display: flex;
+  gap: 15px;
+}
+
+.btn-main, .btn-profile {
   background-color: #ffccff;
   border: none;
-  padding: 0.8rem;
-  border-radius: 8px;
-  text-align: left;
-  font-size: 1rem;
-  color: #333;
-  cursor: pointer;
-}
-
-.side-panel button:hover {
-  background-color: #f4b9dd;
-}
-
-/* Центровка и кнопки */
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 100px;
-}
-
-h1 {
-  margin-bottom: 40px;
-  color: #cc6699;
-}
-
-.button-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.main-button {
-  background-color: #ffe0f0;
-  color: #333;
-  padding: 1rem 2rem;
+  padding: 10px 18px;
   border-radius: 12px;
-  text-decoration: none;
-  font-size: 1.2rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s;
+  font-weight: 600;
+  color: #660066;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(204, 102, 153, 0.25);
+  transition: background-color 0.3s ease;
 }
 
-.main-button:hover {
-  background-color: #ffccff;
+.btn-main:hover, .btn-profile:hover {
+  background-color: #cc6699;
+  color: #fff;
 }
