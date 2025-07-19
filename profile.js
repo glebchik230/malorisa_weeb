@@ -1,38 +1,96 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const openBtn = document.getElementById("open-profile");
-  const closeBtn = document.getElementById("close-profile");
-  const panel = document.getElementById("profile-panel");
+// Получаем элементы из DOM
+const profileFormSection = document.getElementById('profile-form-section');
+const profileViewSection = document.getElementById('profile-view-section');
 
-  const nameInput = document.getElementById("name");
-  const phoneInput = document.getElementById("phone");
-  const telegramInput = document.getElementById("telegram");
-  const registerBtn = document.getElementById("register-btn");
+const profileForm = document.getElementById('profile-form');
+const avatarInput = document.getElementById('avatar-input');
+const avatarPreview = document.getElementById('avatar-preview');
 
-  openBtn.addEventListener("click", () => {
-    panel.classList.remove("-translate-x-full");
-  });
+const displayName = document.getElementById('display-name');
+const displayPhone = document.getElementById('display-phone');
+const displayTelegramId = document.getElementById('display-telegramId');
+const employeeRating = document.getElementById('employee-rating');
 
-  closeBtn.addEventListener("click", () => {
-    panel.classList.add("-translate-x-full");
-  });
+const editProfileBtn = document.getElementById('edit-profile-btn');
+const btnHome = document.getElementById('btn-home');
 
-  registerBtn.addEventListener("click", () => {
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    const telegram = telegramInput.value.trim();
+// Переменная для хранения данных пользователя
+let userData = {
+  avatar: '',
+  name: '',
+  phone: '',
+  telegramId: '',
+  rating: '★★★★☆'  // Пример рейтинга
+};
 
-    [nameInput, phoneInput, telegramInput].forEach(input => input.classList.remove("border", "border-red-500"));
+// Показываем или скрываем секции
+function showProfileView() {
+  profileFormSection.style.display = 'none';
+  profileViewSection.style.display = 'block';
 
-    if (!name  !phone  !telegram) {
-      if (!name) nameInput.classList.add("border", "border-red-500");
-      if (!phone) phoneInput.classList.add("border", "border-red-500");
-      if (!telegram) telegramInput.classList.add("border", "border-red-500");
+  // Отображаем данные пользователя
+  avatarPreview.src = userData.avatar || 'default-avatar.png'; // Путь к аватару по умолчанию
+  displayName.textContent = userData.name;
+  displayPhone.textContent = userData.phone;
+  displayTelegramId.textContent = userData.telegramId;
+  employeeRating.textContent = userData.rating;
+}
 
-      alert("Пожалуйста, заполните все поля.");
-      return;
-    }
+function showProfileForm() {
+  profileFormSection.style.display = 'block';
+  profileViewSection.style.display = 'none';
 
-    alert("Регистрация прошла успешно! (данные не сохраняются)");
-    panel.classList.add("-translate-x-full");
-  });
+  // Заполняем форму текущими данными
+  avatarPreview.src = userData.avatar || 'default-avatar.png';
+  profileForm.name.value = userData.name;
+  profileForm.phone.value = userData.phone;
+  profileForm.telegramId.value = userData.telegramId;
+}
+
+// Обработчик загрузки аватарки
+avatarInput.addEventListener('change', () => {
+  const file = avatarInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      userData.avatar = e.target.result; // base64
+      avatarPreview.src = userData.avatar;
+    };
+    reader.readAsDataURL(file);
+  }
 });
+
+// Обработчик отправки формы регистрации/редактирования
+profileForm.addEventListener('submit', e => {
+  e.preventDefault();
+  // Получаем значения из формы
+  const name = profileForm.name.value.trim();
+  const phone = profileForm.phone.value.trim();
+  const telegramId = profileForm.telegramId.value.trim();
+
+  if (!name || !phone || !telegramId) {
+    alert('Пожалуйста, заполните все поля.');
+    return;
+  }
+
+  // Сохраняем данные пользователя (в памяти)
+  userData.name = name;
+  userData.phone = phone;
+  userData.telegramId = telegramId;
+
+  // Переходим к просмотру профиля
+  showProfileView();
+});
+
+// Обработчик кнопки редактирования
+editProfileBtn.addEventListener('click', () => {
+  showProfileForm();
+});
+
+// Кнопка "На главный экран"
+btnHome.addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+
+// При загрузке страницы показываем форму регистрации по умолчанию
+showProfileForm();
