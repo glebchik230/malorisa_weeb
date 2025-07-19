@@ -6,79 +6,168 @@
   <title>Личный кабинет — Малориса</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .hidden { display: none; }
+    /* Базовый стиль страницы */
+    body {
+      background-color: #f8f0f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(204, 102, 153, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #cc6699;
+      margin-bottom: 30px;
+    }
+
+    /* Стиль для аватарки */
+    .avatar-wrapper {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #cc6699;
+      object-fit: cover;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .avatar:hover {
+      opacity: 0.8;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Стиль для информационных блоков */
+    .info-block {
+      background-color: #fff0f5;
+      border: 2px solid #cc6699;
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 18px;
+      font-size: 18px;
+      color: #666699;
+      box-shadow: 0 3px 6px rgba(204, 102, 153, 0.2);
+    }
+
+    /* Стиль для кнопок */
+    .btn {
+      width: 100%;
+      padding: 14px 0;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      color: white;
+      background: #cc6699;
+      box-shadow: 0 4px 15px rgba(204, 102, 153, 0.4);
+    }
+    .btn:hover {
+      background-color: #b0527d;
+    }
+    .btn-logout {
+      background: #666699;
+      box-shadow: 0 4px 15px rgba(102, 102, 153, 0.4);
+      margin-top: 10px;
+    }
+    .btn-logout:hover {
+      background-color: #4b4e7a;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <section id="registration-form">
-      <h2>Регистрация</h2>
-      <form id="registerForm">
-        <label>Имя: <input type="text" id="name" required></label><br />
-        <label>Телефон: <input type="tel" id="phone" required></label><br />
-        <label>Telegram ID: <input type="text" id="telegramId" required></label><br />
-        <button type="submit">Зарегистрироваться</button>
-      </form>
-    </section>
+  <div class="container">
+    <h1>Личный кабинет</h1>
 
-    <section id="success-message" class="hidden">
-      <h3>Регистрация прошла успешно!</h3>
-      <button onclick="showProfile()">Перейти в личный кабинет</button>
-    </section>
+    <!-- Аватарка с возможностью загрузки -->
+    <div class="avatar-wrapper">
+      <label for="avatar-input">
+        <img src="default-avatar.png" alt="Аватар пользователя" class="avatar" id="avatarPreview" />
+      </label>
+      <input type="file" id="avatar-input" accept="image/*" />
+    </div>
 
-    <section id="user-profile" class="hidden">
-      <h2>Личный кабинет</h2>
-      <p><strong>Имя:</strong> <span id="displayName"></span></p>
-      <p><strong>Telegram ID:</strong> <span id="displayTelegramId"></span></p>
-      <p><strong>Рейтинг:</strong> <span id="rating">5.0 ★</span></p>
-      <button onclick="logout()">Выйти из учётной записи</button>
-      <a href="index.html" class="btn">На главный экран</a>
-    </section>
-  </main>
+    <!-- Информационные блоки -->
+    <div class="info-block" id="userNameBlock">Имя: —</div>
+    <div class="info-block" id="userPhoneBlock">Номер телефона: —</div>
+    <div class="info-block" id="userTelegramBlock">Telegram ID: —</div>
+    <div class="info-block" id="userRatingBlock">Рейтинг: 0</div>
+
+    <!-- Кнопки -->
+    <button class="btn btn-save" id="saveProfileBtn">Сохранить</button>
+    <button class="btn btn-logout" id="logoutBtn">Выйти из учётной записи</button>
+  </div>
 
   <script>
-    const form = document.getElementById('registerForm');
-    const regFormSection = document.getElementById('registration-form');
-    const successSection = document.getElementById('success-message');
-    const profileSection = document.getElementById('user-profile');
+    // Элементы страницы
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarPreview = document.getElementById('avatarPreview');
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const telegramId = document.getElementById('telegramId').value;
-
-      // Простое сохранение в памяти
-      localStorage.setItem('name', name);
-      localStorage.setItem('phone', phone);
-      localStorage.setItem('telegramId', telegramId);
-
-      regFormSection.classList.add('hidden');
-      successSection.classList.remove('hidden');
-    });
-
-    function showProfile() {
-      successSection.classList.add('hidden');
-      profileSection.classList.remove('hidden');
-
-      document.getElementById('displayName').textContent = localStorage.getItem('name');
-      document.getElementById('displayTelegramId').textContent = localStorage.getItem('telegramId');
-    }
-
-    function logout() {
-      localStorage.clear();
-      location.reload();
-    }
-
-    // Автопереход если уже зарегистрирован
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('name')) {
-        regFormSection.classList.add('hidden');
-        successSection.classList.add('hidden');
-        profileSection.classList.remove('hidden');
-        showProfile();
+    // Превью аватарки при загрузке
+    avatarInput.addEventListener('change', () => {
+      const file = avatarInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          avatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
       }
     });
+
+    // Здесь может быть загрузка данных пользователя из локального хранилища или сервера
+    function loadUserProfile() {
+      // пример загрузки из localStorage
+      const name = localStorage.getItem('userName') || '—';
+      const phone = localStorage.getItem('userPhone') || '—';
+      const telegram = localStorage.getItem('userTelegram') || '—';
+      const rating = localStorage.getItem('userRating') || 0;
+      const avatar = localStorage.getItem('userAvatar');
+
+      document.getElementById('userNameBlock').textContent = 'Имя: ' + name;
+      document.getElementById('userPhoneBlock').textContent = 'Номер телефона: ' + phone;
+      document.getElementById('userTelegramBlock').textContent = 'Telegram ID: ' + telegram;
+      document.getElementById('userRatingBlock').textContent = 'Рейтинг: ' + rating;
+
+      if (avatar) {
+        avatarPreview.src = avatar;
+      }
+    }
+
+    // Сохранение (можно заменить на API-запрос)
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+      // здесь добавить логику получения и проверки данных с форм, сейчас просто пример
+      alert('Профиль сохранён! (демо)');
+    });
+
+    // Выход из учётной записи (сброс данных)
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if(confirm('Вы действительно хотите выйти?')) {
+        localStorage.clear();
+        location.reload();
+      }
+    });
+
+    // Загрузка данных при открытии страницы
+    window.onload = loadUserProfile;
   </script>
 </body>
 </html>
