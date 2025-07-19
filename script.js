@@ -1,54 +1,74 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Кнопки
-  const hotBtn = document.getElementById("hot-section-btn");
-  const coldBtn = document.getElementById("cold-section-btn");
-  const callBtn = document.getElementById("call-center-btn");
-  const profileBtn = document.getElementById("profile-btn");
-  const backBtn = document.getElementById("back-to-main");
+// Получаем элементы
+const btnHot = document.getElementById('btnHot');
+const btnCold = document.getElementById('btnCold');
+const btnOperators = document.getElementById('btnOperators');
 
-  // Окна
-  const hotPopup = document.getElementById("hot-popup");
-  const coldPopup = document.getElementById("cold-popup");
-  const callPopup = document.getElementById("call-popup");
-  const profilePanel = document.getElementById("profile-panel");
+const popupHot = document.getElementById('popupHot');
+const popupCold = document.getElementById('popupCold');
+const popupOperators = document.getElementById('popupOperators');
 
-  // Закрытие всех окон
-  function closeAllPopups() {
-    hotPopup.classList.remove("show");
-    coldPopup.classList.remove("show");
-    callPopup.classList.remove("show");
-    profilePanel.classList.remove("slide-in");
+const btnProfile = document.getElementById('btnProfile');
+const btnMain = document.getElementById('btnMain');
+const profilePanel = document.getElementById('profile');
+const btnCloseProfile = document.getElementById('btnCloseProfile');
+
+const profileForm = document.getElementById('profileForm');
+
+// Функция закрытия всех всплывающих окон
+function closeAllPopups() {
+  popupHot.classList.remove('active');
+  popupCold.classList.remove('active');
+  popupOperators.classList.remove('active');
+}
+
+// Открытие всплывающего окна горячего цеха
+btnHot.addEventListener('click', () => {
+  closeAllPopups();
+  popupHot.classList.add('active');
+  btnMain.style.display = 'inline-block';
+});
+
+// Открытие всплывающего окна холодного цеха
+btnCold.addEventListener('click', () => {
+  closeAllPopups();
+  popupCold.classList.add('active');
+  btnMain.style.display = 'inline-block';
+});
+
+// Открытие всплывающего окна операторов
+btnOperators.addEventListener('click', () => {
+  closeAllPopups();
+  popupOperators.classList.add('active');
+  btnMain.style.display = 'inline-block';
+});
+
+// Кнопка "Вернуться на главный экран"
+btnMain.addEventListener('click', () => {
+  closeAllPopups();
+  btnMain.style.display = 'none';
+});
+
+// Открытие/закрытие личного кабинета
+btnProfile.addEventListener('click', () => {
+  profilePanel.classList.add('active');
+});
+
+btnCloseProfile.addEventListener('click', () => {
+  profilePanel.classList.remove('active');
+});
+
+// Обработка формы личного кабинета
+profileForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  // Проверка заполнения полей
+  const name = profileForm.name.value.trim();
+  const phone = profileForm.phone.value.trim();
+  const telegramId = profileForm.telegramId.value.trim();
+
+  if (!name || !phone || !telegramId) {
+    alert('Пожалуйста, заполните все поля!');
+    return;
   }
-
-  // Открытие соответствующих окон
-  hotBtn.addEventListener("click", () => {
-    closeAllPopups();
-    hotPopup.classList.add("show");
-  });
-
-  coldBtn.addEventListener("click", () => {
-    closeAllPopups();
-    coldPopup.classList.add("show");
-  });
-
-  callBtn.addEventListener("click", () => {
-    closeAllPopups();
-    callPopup.classList.add("show");
-  });
-
-  profileBtn.addEventListener("click", () => {
-    closeAllPopups();
-    profilePanel.classList.add("slide-in");
-  });
-
-  backBtn.addEventListener("click", () => {
-    closeAllPopups();
-  });
-
-  // Клик вне окна — закрытие
-  window.addEventListener("click", (e) => {
-    if (e.target.classList.contains("popup")) {
-      e.target.classList.remove("show");
-    }
-  });
+  alert('Данные сохранены! (Локально, не сохраняются)');
+  profilePanel.classList.remove('active');
 });
