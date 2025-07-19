@@ -2,41 +2,72 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Малориса</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malorisa Web App</title>
+  <script src="profile.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <header class="header">
-    <button id="open-profile" class="profile-button">Личный кабинет</button>
-  </header>
-
-  <main class="main-content">
-    <h1>Добро пожаловать в Малорису!</h1>
-    <p>
-      Здравствуйте! Мы — онлайн-ресторан «Малориса». Рады приветствовать вас в нашем приложении.
-      Если вы здесь, значит, скоро станете частью нашей команды. Пожалуйста, зарегистрируйтесь,
-      пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей будущей должностью
-      и обязанностями.
+<body class="bg-gray-100 text-gray-900 font-sans p-4">
+  <!-- 🔹 Главное сообщение -->
+  <div id="main-content">
+    <h1 class="text-2xl font-bold mb-4">Здравствуйте! Мы — онлайн-ресторан «Малориса»</h1>
+    <p class="mb-4">Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.</p>
+    <p class="mb-4">Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей будущей должностью и обязанностями.</p>
+    <p class="mb-6">С меню нашего заведения вы можете ознакомиться по ссылке:  
+      <a href="https://malorisa.ru/" class="text-blue-600 underline" target="_blank">https://malorisa.ru/</a>
     </p>
-    <p>
-      С меню нашего заведения вы можете ознакомиться по ссылке:
-      <a href="https://malorisa.ru/" target="_blank">https://malorisa.ru/</a>
-    </p>
-  </main>
 
-  <aside id="profile-panel" class="profile-panel hidden">
-    <button id="close-profile" class="close-button">Вернуться на главный экран</button>
-    <h2>Регистрация</h2>
-    <form id="registration-form">
-      <input type="text" id="name" placeholder="Имя" required />
-      <input type="tel" id="phone" placeholder="Телефон" required />
-      <input type="text" id="telegram-id" placeholder="Telegram ID" required />
-      <button type="submit">Зарегистрироваться</button>
+    <!-- 🔸 Кнопка личного кабинета -->
+    <div class="flex justify-end mb-4">
+      <button id="open-profile" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">
+        Личный кабинет
+      </button>
+    </div>
+
+    <!-- 🔹 Форма регистрации -->
+    <form id="registration-form" class="bg-white p-4 rounded shadow-md max-w-md mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Регистрация</h2>
+
+      <div class="mb-3">
+        <label for="name" class="block mb-1">Имя</label>
+        <input id="name" type="text" class="w-full border p-2 rounded" />
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="block mb-1">Номер телефона</label>
+        <input id="phone" type="text" class="w-full border p-2 rounded" />
+      </div>
+
+      <div class="mb-3">
+        <label for="tgId" class="block mb-1">Telegram ID</label>
+        <input id="tgId" type="text" class="w-full border p-2 rounded" />
+      </div>
+
+      <div id="error-msg" class="text-red-600 mb-2 hidden"></div>
+
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Зарегистрироваться
+      </button>
     </form>
-    <p id="message"></p>
-  </aside>
+  </div>
 
-  <script src="profile.js"></script>
+  <!-- 🔸 Личный кабинет -->
+  <div id="profile-section" class="hidden bg-white p-6 rounded shadow-md max-w-md mx-auto mt-8">
+    <h2 class="text-xl font-bold mb-4">Личный кабинет</h2>
+    <p><strong>Имя:</strong> <span id="profile-name"></span></p>
+    <p><strong>Телефон:</strong> <span id="profile-phone"></span></p>
+    <p><strong>Telegram ID:</strong> <span id="profile-tgid"></span></p>
+
+    <hr class="my-4">
+
+    <h3 class="font-semibold">Статистика</h3>
+    <p>Пройденные тесты: 0</p>
+    <p>Новые задачи: 0</p>
+
+    <!-- 🔙 Кнопка назад -->
+    <button id="return-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600">
+      Вернуться на главный экран
+    </button>
+  </div>
 </body>
 </html>
