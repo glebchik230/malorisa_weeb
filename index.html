@@ -3,71 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malorisa Web App</title>
+  <title>Малориса — Онлайн-ресторан</title>
   <script src="profile.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans p-4">
-  <!-- 🔹 Главное сообщение -->
-  <div id="main-content">
-    <h1 class="text-2xl font-bold mb-4">Здравствуйте! Мы — онлайн-ресторан «Малориса»</h1>
-    <p class="mb-4">Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.</p>
-    <p class="mb-4">Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. Тест связан с вашей будущей должностью и обязанностями.</p>
-    <p class="mb-6">С меню нашего заведения вы можете ознакомиться по ссылке:  
-      <a href="https://malorisa.ru/" class="text-blue-600 underline" target="_blank">https://malorisa.ru/</a>
+<body class="bg-gray-100 font-sans">
+  <!-- Главный экран -->
+  <div id="main-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
+    <img src="https://vsem-edu-oblako.ru/upload/store/merchant537/logotip41748929613.png?w=600&h=450" alt="Логотип Малориса" class="w-72 mb-6 rounded shadow" />
+    <h1 class="text-2xl font-bold mb-4 text-center">Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
+    <p class="text-center max-w-xl mb-6">
+      Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды. 
+      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили. 
+      Тест связан с вашей будущей должностью и обязанностями. <br>
+      <a href="https://malorisa.ru/" target="_blank" class="text-blue-600 underline">Ознакомьтесь с меню</a>
     </p>
 
-    <!-- 🔸 Кнопка личного кабинета -->
-    <div class="flex justify-end mb-4">
-      <button id="open-profile" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">
+    <!-- Кнопка личного кабинета -->
+    <div class="absolute top-4 right-4">
+      <button onclick="openRegistration()" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">
         Личный кабинет
       </button>
     </div>
-
-    <!-- 🔹 Форма регистрации -->
-    <form id="registration-form" class="bg-white p-4 rounded shadow-md max-w-md mx-auto">
-      <h2 class="text-xl font-semibold mb-4">Регистрация</h2>
-
-      <div class="mb-3">
-        <label for="name" class="block mb-1">Имя</label>
-        <input id="name" type="text" class="w-full border p-2 rounded" />
-      </div>
-
-      <div class="mb-3">
-        <label for="phone" class="block mb-1">Номер телефона</label>
-        <input id="phone" type="text" class="w-full border p-2 rounded" />
-      </div>
-
-      <div class="mb-3">
-        <label for="tgId" class="block mb-1">Telegram ID</label>
-        <input id="tgId" type="text" class="w-full border p-2 rounded" />
-      </div>
-
-      <div id="error-msg" class="text-red-600 mb-2 hidden"></div>
-
-      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-        Зарегистрироваться
-      </button>
-    </form>
   </div>
 
-  <!-- 🔸 Личный кабинет -->
-  <div id="profile-section" class="hidden bg-white p-6 rounded shadow-md max-w-md mx-auto mt-8">
-    <h2 class="text-xl font-bold mb-4">Личный кабинет</h2>
-    <p><strong>Имя:</strong> <span id="profile-name"></span></p>
-    <p><strong>Телефон:</strong> <span id="profile-phone"></span></p>
-    <p><strong>Telegram ID:</strong> <span id="profile-tgid"></span></p>
+  <!-- Форма регистрации / Личный кабинет -->
+  <div id="profile-section" class="hidden fixed top-0 left-0 w-full h-full bg-white p-6 overflow-y-auto transition-transform transform -translate-x-full z-50">
+    <!-- Кнопка вернуться на главный экран -->
+    <div class="mb-4">
+      <button onclick="goBackToMain()" class="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">
+        ← Вернуться на главный экран
+      </button>
+    </div>
 
-    <hr class="my-4">
+    <!-- Регистрация -->
+    <h2 class="text-xl font-semibold mb-4">Регистрация</h2>
+    <div class="space-y-4 max-w-md">
+      <input id="name" type="text" placeholder="Имя" class="w-full p-2 border rounded" />
+      <input id="phone" type="text" placeholder="Номер телефона" class="w-full p-2 border rounded" />
+      <input id="tgId" type="text" placeholder="Telegram ID" class="w-full p-2 border rounded" />
+      <button onclick="registerUser()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+        Зарегистрироваться
+      </button>
+      <div id="error-msg" class="text-red-500"></div>
+    </div>
 
-    <h3 class="font-semibold">Статистика</h3>
-    <p>Пройденные тесты: 0</p>
-    <p>Новые задачи: 0</p>
-
-    <!-- 🔙 Кнопка назад -->
-    <button id="return-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600">
-      Вернуться на главный экран
-    </button>
+    <!-- Блок после успешной регистрации -->
+    <div id="after-registration" class="hidden mt-6">
+      <h3 class="text-lg font-semibold mb-2">Вы успешно зарегистрированы!</h3>
+      <p><strong>Имя:</strong> <span id="user-name"></span></p>
+      <p><strong>Телефон:</strong> <span id="user-phone"></span></p>
+      <p><strong>Telegram ID:</strong> <span id="user-tg"></span></p>
+    </div>
   </div>
 </body>
 </html>
