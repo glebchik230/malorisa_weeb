@@ -2,44 +2,150 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malorisa WebApp</title>
-  <script defer src="profile.js"></script>
-  <link href="https://avatars.mds.yandex.net/get-socsnippets/12770649/2a00000197c3e6298abf1185802941e638bf/square_83">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Малориса | Главная</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1c1c1e;
+      color: #f5f5f5;
+      background-image: url('https://i.pinimg.com/736x/b1/26/28/b126288b70972f906344fc610e55a927.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .header-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .header-buttons button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .header-buttons button:hover {
+      background-color: #555;
+    }
+
+    .info-box {
+      max-width: 700px;
+      margin: 2rem auto;
+      font-size: 1rem;
+      background-color: rgba(30, 30, 32, 0.85);
+      padding: 1.5rem;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .open-btn {
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      background-color: #222;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .open-btn:hover {
+      background-color: #444;
+    }
+
+    .popup {
+      position: fixed;
+      width: 80%;
+      max-width: 600px;
+      background-color: #222;
+      color: #f5f5f5;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      z-index: 1000;
+      display: none;
+    }
+
+    .popup.top    { top: -100%; left: 50%; transform: translateX(-50%); animation: slideDown 0.6s forwards; }
+    .popup.bottom { bottom: -100%; left: 50%; transform: translateX(-50%); animation: slideUp 0.6s forwards; }
+    .popup.left   { top: 50%; left: -100%; transform: translateY(-50%); animation: slideRight 0.6s forwards; }
+
+    @keyframes slideDown {
+      to { top: 10%; }
+    }
+
+    @keyframes slideUp {
+      to { bottom: 10%; }
+    }
+
+    @keyframes slideRight {
+      to { left: 10%; }
+    }
+
+    .close-btn {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      float: right;
+      cursor: pointer;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body>
+  <div class="overlay"></div>
+  <div class="content">
 
-  <div class="p-4 flex justify-between items-center border-b border-gray-700">
-    <h1 class="text-xl font-bold">Онлайн-ресторан Малориса</h1>
-    <button id="open-profile" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">Личный кабинет</button>
-  </div>
-
-  <div class="p-6">
-    <img src="https://vsem-edu-oblako.ru/upload/store/merchant537/logotip41748929613.png?w=600&h=450" alt="Логотип" class="w-64 mx-auto mb-6">
-    <p class="text-center max-w-xl mx-auto">
-      Здравствуйте! Мы — онлайн-ресторан «Малориса». Рады приветствовать вас в нашем приложении.
-      Если вы здесь, значит, скоро станете частью нашей команды.
-      Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.
-      Тест связан с вашей будущей должностью и обязанностями.
-      С меню нашего заведения вы можете ознакомиться по ссылке:
-      <a href="https://malorisa.ru/" class="text-blue-400 underline">https://malorisa.ru/</a>.
-    </p>
-  </div>
-
-  <!-- Модальное окно -->
-  <div id="profile-panel" class="fixed top-0 left-0 w-full sm:w-96 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
-    <div class="flex justify-between items-center p-4 border-b border-gray-600">
-      <h2 class="text-lg font-semibold">Регистрация</h2>
-      <button id="close-profile" class="text-gray-300 hover:text-white">&times;</button>
+    <div class="header-buttons">
+      <button onclick="window.location.reload()">Вернуться на главный экран</button>
+      <button onclick="alert('Открывается личный кабинет')">Личный кабинет</button>
     </div>
 
-    <div class="p-4 space-y-4">
-      <input type="text" id="name" placeholder="Имя" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
-      <input type="text" id="phone" placeholder="Номер телефона" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
-      <input type="text" id="telegram" placeholder="Telegram ID" class="w-full px-3 py-2 bg-gray-700 rounded focus:outline-none focus:ring focus:border-blue-500">
-      <button id="register-btn" class="w-full bg-blue-600 py-2 rounded hover:bg-blue-500">Зарегистрироваться</button>
+    <div class="info-box">
+      <img src="https://vsem-edu-oblako.ru/upload/store/merchant537/logotip41748929613.png?w=600&h=450" alt="Малориса" style="max-width: 150px; margin-bottom: 1rem;">
+      <p>Здравствуйте! Мы — онлайн-ресторан «Малориса». Рады приветствовать вас в нашем приложении.</p>
+      <p>Если вы здесь, значит, скоро станете частью нашей команды. Пожалуйста, зарегистрируйтесь, пройдите обучение и тест, о котором вам сообщили.</p>
+      <p><strong>С меню можно ознакомиться по ссылке:</strong> <a href="https://malorisa.ru" style="color: #58a6ff;">malorisa.ru</a></p>
     </div>
-  </div>
 
-</body>
-</html>
+    <div class="button-group">
+      <button class="open-btn" onclick="openPopup('hot')">Горячий цех</button>
+      <button class="open-btn" onclick="openPopup('cold')">Холодный цех</button>
+      <button class="open-btn" onclick="openPopup('operators')">Операторы</button>
+    </div>
+
+    <!-- Горячий цех -->
+    <div class="popup top" id="popup-hot">
