@@ -4,7 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Профиль</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f0f7; /* светло-розовый фон */
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .profile-container h1 {
+      color: #cc6699;
+      margin-bottom: 10px;
+    }
+
+    .profile-container p {
+      margin-bottom: 30px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .button-group button {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: #cc6699;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .button-group button:hover {
+      background-color: #b35588;
+    }
+
+    .to-home a {
+      text-decoration: none;
+      color: #999;
+      font-size: 14px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .to-home a:hover {
+      color: #666;
+    }
+  </style>
 </head>
 <body>
   <div class="profile-container">
@@ -20,16 +84,19 @@
   </div>
 
   <script>
+    // Переход к регистрации
     document.getElementById("go-to-register").onclick = function () {
       window.location.href = "register.html";
     };
 
+    // Переход ко входу
     document.getElementById("go-to-login").onclick = function () {
       window.location.href = "login.html";
     };
   </script>
 </body>
 </html>
+
 
 
 
