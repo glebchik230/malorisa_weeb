@@ -1,77 +1,60 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Админ-панель</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f0f7;
-      padding: 30px;
-    }
-    h1 {
-      color: #cc6699;
-    }
-    .user-card {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    button {
-      margin: 5px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .warn {
-      background: #f99;
-      color: #fff;
-    }
-    .praise {
-      background: #9c9;
-      color: #fff;
-    }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;padding:20px}
+    .box{background:#fff;padding:20px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);max-width:500px;margin:auto}
+    select,input,textarea{width:100%;margin:8px 0;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+    button{padding:10px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer}
+    button:hover{background:#b35588}
+    .back{margin-top:12px}
+    .back a{color:#999;text-decoration:none}
   </style>
 </head>
 <body>
-  <h1>Админ-панель</h1>
-  <div id="user-list"></div>
-
+  <div class="box">
+    <h2>Админ-панель</h2>
+    <select id="sel"><option>Выберите...</option></select>
+    <select id="type"><option value="Похвала">Похвала</option><option value="Выговор">Выговор</option></select>
+    <textarea id="msg" rows="3" placeholder="Текст уведомления"></textarea>
+    <button onclick="send()">Отправить</button>
+    <div class="back"><a href="profile.html">← Назад</a></div>
+  </div>
   <script>
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const u=JSON.parse(localStorage.getItem('user'));
+    if(!u||u.role!=='admin'){location.href='login.html'}
 
-    function updateRating(index, delta, message) {
-      users[index].rating = (users[index].rating || 0) + delta;
-      users[index].notifications = users[index].notifications || [];
-      users[index].notifications.push(message);
-      localStorage.setItem("users", JSON.stringify(users));
-      render();
-    }
-
-    function render() {
-      const list = document.getElementById("user-list");
-      list.innerHTML = "";
-
-      users.forEach((user, index) => {
-        const div = document.createElement("div");
-        div.className = "user-card";
-        div.innerHTML = `
-          <strong>${user.name} (${user.phone})</strong><br>
-          Рейтинг: ${user.rating || 0}<br>
-          <button class="warn" onclick="updateRating(${index}, -1, 'Выговор')">Выговор</button>
-          <button class="praise" onclick="updateRating(${index}, 1, 'Похвала')">Похвала</button>
-        `;
-        list.appendChild(div);
+    const sel=document.getElementById('sel');
+    function upd(){
+      sel.innerHTML='<option>Выберите...</option>';
+      JSON.parse(localStorage.getItem('users')||'[]').forEach(us=>{
+        sel.innerHTML+=`<option value="${us.phone}">${us.name} (${us.phone})</option>`;
       });
     }
+    upd();
 
-    render();
+    function send(){
+      const ph=sel.value;
+      const tp=document.getElementById('type').value;
+      const txt=document.getElementById('msg').value.trim();
+      if(ph==='Выберите...'||!txt){alert('Заполните!');return;}
+      const uss=JSON.parse(localStorage.getItem('users')||'[]');
+      const idx=uss.findIndex(x=>x.phone===ph);
+      const item=uss[idx];
+      const delta = tp==='Похвала'?1:-1;
+      item.rating = (item.rating||0) + delta;
+      item.notifications = item.notifications||[];
+      item.notifications.push(`${tp}: ${txt}`);
+      uss[idx]=item;
+      localStorage.setItem('users',JSON.stringify(uss));
+      alert('Отправлено');
+    }
   </script>
 </body>
 </html>
+
 
 
