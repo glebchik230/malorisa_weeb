@@ -16,25 +16,25 @@
 
   <!-- Выдвижная панель -->
   <div id="sidebar" class="sidebar">
-    <a href="profile.html">Личный кабинет</a>
+    <a href="#" onclick="goToCabinet()">Личный кабинет</a>
     <a href="about.html">О нас</a>
     <a href="https://malorisa.ru" target="_blank" rel="noopener noreferrer">Сайт Малориса</a>
     <a href="contacts.html">Контакты</a>
   </div>
 
   <header>
-   <div class="top-buttons">
-  <a href="testing.html" class="top-button">Тестирование</a>
-</div>
+    <div class="top-buttons">
+      <a href="testing.html" class="top-button">Тестирование</a>
+    </div>
   </header>
 
   <main id="main-screen" class="screen active">
     <h1>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
     <p class="main-description">
-  Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
-  Пожалуйста, зарегистрируйтесь! С меню нашего заведения вы можете ознакомиться по ссылке:
-  <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
-</p>
+      Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
+      Пожалуйста, зарегистрируйтесь! С меню нашего заведения вы можете ознакомиться по ссылке:
+      <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
+    </p>
 
     <div class="main-buttons">
       <a href="hot-kitchen.html" class="btn">Горячий цех</a>
@@ -46,6 +46,15 @@
   <script>
     function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    function goToCabinet() {
+      const user = localStorage.getItem('user');
+      if (user) {
+        window.location.href = "cabinet.html";
+      } else {
+        window.location.href = "profile.html";
+      }
     }
   </script>
 </body>
