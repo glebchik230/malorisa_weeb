@@ -2,93 +2,134 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Админ панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Админ-панель</title>
+  <script src="https://unpkg.com/backendless"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: sans-serif;
       background-color: #f9f0f7;
-      color: #333;
+      margin: 0;
       padding: 20px;
-      max-width: 600px;
-      margin: auto;
     }
+
     h1 {
       color: #cc6699;
-      text-align: center;
     }
-    #users-list div {
-      background: white;
-      margin-bottom: 10px;
+
+    .user-list {
+      margin: 20px 0;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #fff;
       padding: 10px;
       border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    button {
-      margin: 5px 10px 20px 0;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .user-item button {
+      margin-left: 10px;
+    }
+
+    .back-button, .logout-button {
       background-color: #cc6699;
       color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      margin-right: 10px;
       cursor: pointer;
-      font-size: 16px;
     }
-    button:hover {
+
+    .back-button:hover, .logout-button:hover {
       background-color: #b35588;
     }
   </style>
 </head>
 <body>
+  <h1>Админ-панель</h1>
+  <div>
+    <button class="back-button" onclick="goBack()">← Назад</button>
+    <button class="logout-button" onclick="logout()">Выйти</button>
+  </div>
+  <h3>Список сотрудников:</h3>
+  <div class="user-list" id="user-list">Загрузка...</div>
 
-  <h1>Админ панель — список пользователей</h1>
-
-  <div id="users-list">Загрузка пользователей...</div>
-
-  <button onclick="goBack()">← Назад</button>
-  <button onclick="logout()">Выйти</button>
-
-  <script src="https://unpkg.com/backendless/dist/backendless.min.js"></script>
   <script>
-    // Инициализация Backendless с твоими ключами
-    Backendless.initApp("DCA33B47-8058-4798-8EFA-40BE7FDE1DB3", "433B51A9-0249-48FE-96EF-C94A139DD378");
+    const APP_ID = "DCA33B47-8058-4798-8EFA-40BE7FDE1DB3";
+    const API_KEY = "433B51A9-0249-48FE-96EF-C94A139DD378";
 
-    // Загрузка пользователей из таблицы AppUsers
-    async function loadUsers() {
-      const container = document.getElementById('users-list');
+    Backendless.initApp(APP_ID, API_KEY);
+
+    async function getUsers() {
       try {
-        const users = await Backendless.Data.of("AppUsers").find();
-        if (!users.length) {
-          container.textContent = "Пользователей нет";
-          return;
-        }
-        container.innerHTML = "";
+        const users = await Backendless.Data.of("Users").find();
+        const list = document.getElementById("user-list");
+        list.innerHTML = "";
+
         users.forEach(user => {
-          const div = document.createElement('div');
-          div.textContent = `${user.name} (${user.phone}) — Рейтинг: ${user.rating ?? 0}`;
-          container.appendChild(div);
+          if (user.phone !== "9004163928") {
+            const div = document.createElement("div");
+            div.className = "user-item";
+            div.innerHTML = `
+              <span>${user.phone || "Без номера"}</span>
+              <div>
+                <button onclick="sendMessage('${user.objectId}', 'Похвала', 'praise')">Похвала</button>
+                <button onclick="sendMessage('${user.objectId}', 'Выговор', 'warning')">Выговор</button>
+              </div>
+            `;
+            list.appendChild(div);
+          }
         });
-      } catch (err) {
-        console.error("Ошибка загрузки:", err);
-        container.textContent = "Ошибка загрузки пользователей.";
+
+        if (users.length === 0) {
+          list.innerHTML = "Нет пользователей.";
+        }
+      } catch (e) {
+        document.getElementById("user-list").innerText = "Ошибка загрузки пользователей: " + e.message;
       }
     }
 
-    // Кнопка Назад — переходит на index.html
+    async function sendMessage(toId, text, type) {
+      try {
+        await Backendless.Data.of("Messages").save({
+          toId,
+          text,
+          type,
+          created: new Date()
+        });
+
+        // Обновить рейтинг
+        const user = await Backendless.Data.of("Users").findById(toId);
+        let delta = type === "praise" ? 1 : -1;
+        user.rating = (user.rating || 0) + delta;
+        await Backendless.Data.of("Users").save(user);
+
+        alert("Сообщение отправлено");
+      } catch (e) {
+        alert("Ошибка: " + e.message);
+      }
+    }
+
     function goBack() {
       window.location.href = "index.html";
     }
 
-    // Кнопка Выйти — удаляет пользователя из localStorage и возвращает на страницу входа
-    function logout() {
+    async function logout() {
+      await Backendless.UserService.logout();
       localStorage.removeItem("user");
       window.location.href = "profile.html";
     }
 
-    // Загрузка пользователей при загрузке страницы
-    window.onload = loadUsers;
+    getUsers();
   </script>
-
 </body>
 </html>
 
