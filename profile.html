@@ -3,20 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Профиль</title>
+  <title>Профиль — Вход и регистрация</title>
+  <style>
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+    button { margin: 5px; }
+  </style>
 </head>
 <body>
 
   <h1>Личный кабинет</h1>
 
-  <div id="profile-info"></div>
+  <!-- Кнопки переключения -->
+  <div>
+    <button id="showRegister">Зарегистрироваться</button>
+    <button id="showLogin">Войти</button>
+  </div>
 
-  <button id="logout-btn">Выйти</button>
+  <!-- Форма регистрации -->
+  <form id="registerForm" class="form-section active">
+    <h2>Регистрация</h2>
 
-  <script src="profile.js"></script>
+    <label for="reg-avatar">Аватар:</label>
+    <input type="file" id="reg-avatar" accept="image/*" required />
+
+    <label for="reg-name">Имя:</label>
+    <input type="text" id="reg-name" required />
+
+    <label for="reg-phone">Телефон:</label>
+    <input type="tel" id="reg-phone" required />
+
+    <label for="reg-telegramId">Telegram ID:</label>
+    <input type="text" id="reg-telegramId" required />
+
+    <label for="reg-password">Пароль:</label>
+    <input type="password" id="reg-password" required />
+
+    <label for="reg-confirmPassword">Подтвердите пароль:</label>
+    <input type="password" id="reg-confirmPassword" required />
+
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+
+  <!-- Форма входа -->
+  <form id="loginForm" class="form-section">
+    <h2>Вход</h2>
+
+    <label for="login-phone">Телефон:</label>
+    <input type="tel" id="login-phone" required />
+
+    <label for="login-password">Пароль:</label>
+    <input type="password" id="login-password" required />
+
+    <button type="submit">Войти</button>
+  </form>
+
+  <!-- Профиль (появится после успешного входа или регистрации) -->
+  <div id="userProfile" style="display:none;">
+    <h2>Добро пожаловать, <span id="userName"></span>!</h2>
+    <img id="userAvatar" src="" alt="Аватар" width="100" />
+    <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
+    <p><strong>Telegram ID:</strong> <span id="userTelegram"></span></p>
+    <button id="logoutBtn">Выйти</button>
+  </div>
+
+<script>
+  // Переключение между формами
+  const registerForm = document.getElementById('registerForm');
+  const loginForm = document.getElementById('loginForm');
+  const showRegisterBtn = document.getElementById('showRegister');
+  const showLoginBtn = document.getElementById('showLogin');
+  const userProfile = document.getElementById('userProfile');
+
+  showRegisterBtn.onclick = () => {
+    registerForm.classList.add('active');
+    loginForm.classList.remove('active');
+    userProfile.style.display = 'none';
+  };
+  showLoginBtn.onclick = () => {
+    loginForm.classList.add('active');
+    registerForm.classList.remove('active');
+    userProfile.style.display = 'none';
+  };
+
+  // Регистрация
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const avatarInput = document.getElementById('reg-avatar');
+    const name = document.getElementById('reg-name').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const telegramId = document.getElementById('reg-telegramId').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('reg-confirmPassword').value;
+
+    if(password !== confirmPassword) {
+      alert('Пароли не совпадают!');
+      return;
+    }
+
+    if(avatarInput.files.length === 0) {
+      alert('Пожалуйста, загрузите аватар.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function() {
+      const avatar = reader.result;
+
+      const userData = { avatar, name, phone, telegramId, password };
+      localStorage.setItem('user', JSON.stringify(userData));
+      showUserProfile(userData);
+    };
+    reader.readAsDataURL(avatarInput.files[0]);
+  });
+
+  // Вход
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const phone = document.getElementById('login-phone').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if(user && user.phone === phone && user.password === password) {
+      showUserProfile(user);
+    } else {
+      alert('Неверный телефон или пароль!');
+    }
+  });
+
+  // Показать профиль пользователя
+  function showUserProfile(user) {
+    registerForm.classList.remove('active');
+    loginForm.classList.remove('active');
+    userProfile.style.display = 'block';
+
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userAvatar').src = user.avatar;
+    document.getElementById('userPhone').textContent = user.phone;
+    document.getElementById('userTelegram').textContent = user.telegramId;
+  }
+
+  // Выход из профиля
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('user');
+    userProfile.style.display = 'none';
+    showLoginBtn.click(); // Показать форму входа
+  });
+
+  // При загрузке страницы проверяем, есть ли уже пользователь
+  window.onload = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user) {
+      showUserProfile(user);
+    } else {
+      showLoginBtn.click(); // Показываем форму входа по умолчанию
+    }
+  };
+</script>
+
 </body>
 </html>
-
-
 
 
