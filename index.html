@@ -63,6 +63,20 @@
         window.location.href = "profile.html";
       }
     }
+    async function registerUser(phone, password) {
+    const user = new Backendless.User();
+    user.email = phone + "@example.com";
+    user.password = password;
+    user.phone = phone;
+    user.rating = 0;
+
+    try {
+      await Backendless.UserService.register(user);
+      alert("Регистрация успешна");
+    } catch (error) {
+      alert("Ошибка: " + error.message);
+    }
+  }
   </script>
 </body>
 </html>
