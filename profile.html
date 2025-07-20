@@ -4,114 +4,184 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Личный кабинет</title>
-  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backendless/7.0.5/backendless.min.js"></script>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f9f0f7;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      text-align: center;
     }
-    .container {
-      background: #fff;
+    h2 {
+      color: #b3478f;
+    }
+    button, input {
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    input {
+      width: 250px;
+    }
+    .hidden {
+      display: none;
+    }
+    .profile-box {
+      background: white;
       padding: 20px;
       border-radius: 16px;
-      display: inline-block;
-      width: 90%;
-      max-width: 400px;
-    }
-    button {
-      background-color: #f08ca4;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 10px;
-      margin: 10px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #e76c8c;
-    }
-    #notifications {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       margin-top: 20px;
-      text-align: left;
+      text-align: center;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Личный профиль</h2>
-    <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
-    <p><strong>Рейтинг:</strong> <span id="userRating">0</span></p>
-    <button onclick="logout()">Выйти</button>
-    <button onclick="goBack()">Назад</button>
-    <button onclick="loadNotifications()">Уведомления</button>
+  <h2>Личный кабинет</h2>
+  
+  <!-- Кнопки при первом заходе -->
+  <div id="choice-box" class="btn-group">
+    <button onclick="showRegister()">Зарегистрироваться</button>
+    <button onclick="showLogin()">Войти</button>
+    <button onclick="goHome()">На главную</button>
+  </div>
 
-    <div id="notifications"></div>
+  <!-- Регистрация -->
+  <div id="register-box" class="profile-box hidden">
+    <h3>Регистрация</h3>
+    <input type="text" id="reg-phone" placeholder="Телефон"><br>
+    <input type="password" id="reg-pass" placeholder="Пароль"><br>
+    <input type="password" id="reg-confirm" placeholder="Подтвердите пароль"><br>
+    <button onclick="register()">Зарегистрироваться</button>
+    <button onclick="goBack()">Назад</button>
+  </div>
+
+  <!-- Вход -->
+  <div id="login-box" class="profile-box hidden">
+    <h3>Вход</h3>
+    <input type="text" id="login-phone" placeholder="Телефон"><br>
+    <input type="password" id="login-pass" placeholder="Пароль"><br>
+    <button onclick="login()">Войти</button>
+    <button onclick="goBack()">Назад</button>
+  </div>
+
+  <!-- Профиль -->
+  <div id="profile-box" class="profile-box hidden">
+    <h3 id="welcome-title">Добро пожаловать!</h3>
+    <p><strong>Телефон:</strong> <span id="user-phone"></span></p>
+    <p><strong>Рейтинг:</strong> <span id="user-rating">0</span></p>
+    <button onclick="logout()">Выйти</button><br><br>
+    <button onclick="goHome()">Назад</button>
   </div>
 
   <script>
-    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
-    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
-    const ADMIN_PHONE = '9004163928';
-    const ADMIN_PASSWORD = '123';
-
+    const APP_ID = "DCA33B47-8058-4798-8EFA-40BE7FDE1DB3";
+    const API_KEY = "433B51A9-0249-48FE-96EF-C94A139DD378";
     Backendless.initApp(APP_ID, API_KEY);
 
-    Backendless.UserService.getCurrentUser()
-      .then(user => {
-        if (!user) {
-          window.location.href = "profile.html";
-          return;
-        }
+    const ADMIN_PHONE = "9004163928";
+    const ADMIN_PASS = "123";
 
-        // Проверка на админа
-        if (user.phone === ADMIN_PHONE) {
-          Backendless.UserService.login(user.email, ADMIN_PASSWORD, true)
-            .then(() => {
-              window.location.href = "admin.html";
-            })
-            .catch(() => {
-              // остаться в личном профиле
-              document.getElementById("userPhone").textContent = user.phone;
-              document.getElementById("userRating").textContent = user.rating || 0;
-            });
-        } else {
-          document.getElementById("userPhone").textContent = user.phone;
-          document.getElementById("userRating").textContent = user.rating || 0;
-        }
-      });
+    function showRegister() {
+      document.getElementById("choice-box").classList.add("hidden");
+      document.getElementById("register-box").classList.remove("hidden");
+    }
 
-    function logout() {
-      Backendless.UserService.logout()
-        .then(() => window.location.href = "profile.html")
-        .catch(error => alert("Ошибка: " + error.message));
+    function showLogin() {
+      document.getElementById("choice-box").classList.add("hidden");
+      document.getElementById("login-box").classList.remove("hidden");
     }
 
     function goBack() {
+      document.querySelectorAll(".profile-box").forEach(el => el.classList.add("hidden"));
+      document.getElementById("choice-box").classList.remove("hidden");
+    }
+
+    function goHome() {
       window.location.href = "index.html";
     }
 
-    function loadNotifications() {
-      Backendless.UserService.getCurrentUser().then(user => {
-        const phone = user.phone;
-        const query = Backendless.DataQueryBuilder.create().setWhereClause(`recipientPhone = '${phone}'`);
-        Backendless.Data.of("Notifications").find(query).then(notifications => {
-          const container = document.getElementById("notifications");
-          container.innerHTML = "<h3>Уведомления:</h3>";
-          if (notifications.length === 0) {
-            container.innerHTML += "<p>Нет уведомлений</p>";
-          } else {
-            notifications.forEach(n => {
-              const color = n.type === 'похвала' ? 'green' : (n.type === 'выговор' ? 'red' : 'black');
-              container.innerHTML += `<p style="color: ${color}">[${n.type}] ${n.message}</p>`;
-            });
-          }
-        });
+    async function register() {
+      const phone = document.getElementById("reg-phone").value.trim();
+      const pass = document.getElementById("reg-pass").value;
+      const confirm = document.getElementById("reg-confirm").value;
+
+      if (!phone || !pass || !confirm) return alert("Заполните все поля.");
+      if (pass !== confirm) return alert("Пароли не совпадают.");
+
+      const user = new Backendless.User();
+      user.email = phone + "@app.com";
+      user.password = pass;
+      user.phone = phone;
+      user.rating = 0;
+
+      try {
+        await Backendless.UserService.register(user);
+        alert("Успешно зарегистрированы!");
+        await Backendless.Messaging.publish("admin_notifications", `Новый пользователь: ${phone}`);
+        loginAfter(phone, pass);
+      } catch (e) {
+        alert("Ошибка регистрации: " + e.message);
+      }
+    }
+
+    async function login() {
+      const phone = document.getElementById("login-phone").value.trim();
+      const pass = document.getElementById("login-pass").value;
+      loginAfter(phone, pass);
+    }
+
+    async function loginAfter(phone, pass) {
+      try {
+        const user = await Backendless.UserService.login(phone + "@app.com", pass, true);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
+          window.location.href = "admin.html";
+        } else {
+          showProfile(user);
+        }
+      } catch (e) {
+        alert("Ошибка входа: " + e.message);
+      }
+    }
+
+    function showProfile(user) {
+      document.querySelectorAll(".profile-box").forEach(el => el.classList.add("hidden"));
+      document.getElementById("profile-box").classList.remove("hidden");
+      document.getElementById("user-phone").innerText = user.phone;
+      document.getElementById("user-rating").innerText = user.rating || 0;
+    }
+
+    function logout() {
+      Backendless.UserService.logout().then(() => {
+        localStorage.removeItem("user");
+        location.reload();
       });
     }
+
+    // Автологин при перезагрузке
+    window.addEventListener("load", async () => {
+      const user = await Backendless.UserService.getCurrentUser();
+      if (user) {
+        if (user.phone === ADMIN_PHONE && user.password === ADMIN_PASS) {
+          window.location.href = "admin.html";
+        } else {
+          showProfile(user);
+        }
+      }
+    });
   </script>
 </body>
 </html>
