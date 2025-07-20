@@ -2,86 +2,105 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Регистрация — Малориса</title>
-  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Регистрация</title>
+  <script src="https://cdn.backendless.com/sdk/js/latest/backendless.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #ffe6f0;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f0f7;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      text-align: center;
     }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      display: inline-block;
-    }
-    input {
-      display: block;
-      margin: 10px auto;
-      padding: 8px;
-      width: 80%;
+    h2 { margin-bottom: 20px; }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
     button {
-      padding: 10px 20px;
-      background: #f08ca4;
+      background-color: #ffb6c1;
       border: none;
-      border-radius: 8px;
-      color: white;
       cursor: pointer;
     }
-    button:hover {
-      background: #e76c8c;
+    .nav-buttons {
+      margin-top: 20px;
+    }
+    .nav-buttons a {
+      display: inline-block;
+      margin: 5px;
+      color: #fff;
+      background-color: #999;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h2>Регистрация пользователя</h2>
+  <h2>Регистрация</h2>
   <form id="registerForm">
-    <input type="text" id="phone" placeholder="Телефон" required />
-    <input type="password" id="password" placeholder="Пароль" required />
+    <input type="text" id="phone" placeholder="Номер телефона" required><br>
+    <input type="password" id="password" placeholder="Пароль" required><br>
+    <input type="password" id="confirm" placeholder="Подтвердите пароль" required><br>
     <button type="submit">Зарегистрироваться</button>
   </form>
+
+  <div class="nav-buttons">
+    <a href="index.html">На главную</a>
+    <a href="login.html">Войти</a>
+  </div>
 
   <script>
     const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
     const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
-    const ADMIN_PHONE = '9004163928';
-
     Backendless.initApp(APP_ID, API_KEY);
 
-    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    const ADMIN_PHONE = '9004163928';
+
+    document.getElementById("registerForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value;
+
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (password !== confirm) {
+        alert("Пароли не совпадают!");
+        return;
+      }
 
       const user = new Backendless.User();
-      user.password = password;
       user.phone = phone;
-      user.email = phone + '@example.com';
+      user.password = password;
+      user.email = phone + "@example.com"; // нужен для Backendless
       user.rating = 0;
 
       try {
-        const registeredUser = await Backendless.UserService.register(user);
-
-        // Уведомление для админа о новой регистрации
-        const adminObject = {
-          recipientPhone: ADMIN_PHONE,
-          message: `Новый пользователь зарегистрировался: ${phone}`,
-          type: 'регистрация'
+        await Backendless.UserService.register(user);
+        
+        // Отправка уведомления админу (в таблицу "notifications")
+        const notification = {
+          type: "регистрация",
+          message: `Новый пользователь с номером ${phone}`,
+          createdAt: new Date()
         };
-        await Backendless.Data.of("Notifications").save(adminObject);
+        await Backendless.Data.of("notifications").save(notification);
 
-        alert("Регистрация успешна. Теперь войдите.");
+        alert("Регистрация успешна!");
         window.location.href = "profile.html";
-      } catch (err) {
-        alert("Ошибка: " + err.message);
+      } catch (error) {
+        alert("Ошибка регистрации: " + error.message);
       }
     });
   </script>
 </body>
 </html>
-
 
