@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Админ-панель</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f0f7;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      color: #cc6699;
+    }
+    select, button {
+      font-size: 16px;
+      padding: 8px;
+      margin: 10px 5px 10px 0;
+      border-radius: 8px;
+      border: 1.5px solid #d6b8d8;
+    }
+    button {
+      background-color: #cc6699;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #b35588;
+    }
+    .log {
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Админ-панель</h1>
+  
+  <label for="employeeSelect">Выберите сотрудника:</label><br/>
+  <select id="employeeSelect"></select><br/>
+  
+  <button id="warnBtn">Сделать выговор</button>
+  <button id="praiseBtn">Похвалить</button>
+  
+  <div class="log" id="log"></div>
+
+  <script>
+    // Для примера — несколько пользователей в localStorage или создать если нет
+    if (!localStorage.getItem('users')) {
+      const sampleUsers = [
+        { phone: '111', name: 'Иван', rating: 5, notifications: [] },
+        { phone: '222', name: 'Мария', rating: 7, notifications: [] }
+      ];
+      localStorage.setItem('users', JSON.stringify(sampleUsers));
+    }
+
+    const employeeSelect = document.getElementById('employeeSelect');
+    const warnBtn = document.getElementById('warnBtn');
+    const praiseBtn = document.getElementById('praiseBtn');
+    const log = document.getElementById('log');
+
+    function loadUsers() {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      employeeSelect.innerHTML = '';
+      users.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user.phone;
+        option.textContent = `${user.name} (${user.phone}) — рейтинг: ${user.rating || 0}`;
+        employeeSelect.appendChild(option);
+      });
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function addNotification(user, type, message) {
+      if (!user.notifications) user.notifications = [];
+      user.notifications.push({
+        type, message, date: new Date().toLocaleString()
+      });
+    }
+
+    function updateRating(user, delta) {
+      user.rating = (user.rating || 0) + delta;
+      if (user.rating < 0) user.rating = 0;
+    }
+
+    function showLog(message) {
+      log.textContent = message;
+    }
+
+    function processAction(delta, actionText) {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const phone = employeeSelect.value;
+      const user = users.find(u => u.phone === phone);
+      if (!user) {
+        showLog('Выберите сотрудника.');
+        return;
+      }
+      updateRating(user, delta);
+      addNotification(user, delta > 0 ? 'Похвала' : 'Выговор', `${actionText}. Текущий рейтинг: ${user.rating}`);
+      saveUsers(users);
+      loadUsers();
+      showLog(`Сотруднику ${user.name} сделан ${delta > 0 ? 'похвальный отзыв' : 'выговор'}. Рейтинг: ${user.rating}`);
+    }
+
+    warnBtn.addEventListener('click', () => processAction(-1, 'Выговор'));
+    praiseBtn.addEventListener('click', () => processAction(1, 'Похвала'));
+
+    loadUsers();
+  </script>
+</body>
+</html>
 
