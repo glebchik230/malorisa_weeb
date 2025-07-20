@@ -4,213 +4,193 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Админ-панель</title>
-  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9f0f7;
+      font-family: Arial, sans-serif;
       padding: 20px;
+      background: #f9f0f7;
       color: #333;
-      max-width: 700px;
-      margin: auto;
+      min-height: 100vh;
     }
-    h2 {
-      color: #cc6699;
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
-    select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #cc6699;
-      color: white;
+    #backBtn {
+      background: none;
       border: none;
+      color: #cc6699;
+      font-size: 18px;
       cursor: pointer;
+      padding: 0;
+    }
+    #logoutBtn {
+      background-color: #cc6699;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
       transition: background-color 0.3s ease;
     }
-    button:hover {
+    #logoutBtn:hover {
       background-color: #b35588;
     }
-    #notifications {
-      margin-top: 30px;
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    li {
       background: white;
-      padding: 15px;
-      border-radius: 15px;
-      max-height: 250px;
-      overflow-y: auto;
-      box-shadow: 0 0 10px rgba(204,102,153,0.3);
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    #notifications h3 {
-      margin-top: 0;
-      color: #cc6699;
+    .user-info {
+      flex-grow: 1;
     }
-    .notification-item {
-      border-bottom: 1px solid #eee;
-      padding: 10px 0;
+    .action-buttons button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: white;
+      transition: background-color 0.3s ease;
     }
-    .notification-item:last-child {
-      border-bottom: none;
+    .praise {
+      background-color: #4caf50;
+    }
+    .praise:hover {
+      background-color: #388e3c;
+    }
+    .reprimand {
+      background-color: #f44336;
+    }
+    .reprimand:hover {
+      background-color: #d32f2f;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/backendless@7.0.7/dist/backendless.min.js"></script>
 </head>
 <body>
-  <h2>Админ-панель</h2>
-   <button id="backBtn" style="
-    background: none; 
-    border: none; 
-    color: #cc6699; 
-    font-size: 18px; 
-    cursor: pointer; 
-    margin-bottom: 20px;
-    padding: 0;
-  ">← Назад</button>
-  
-  <button id="logoutBtn" style="
-    background-color: #cc6699;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  ">Выйти</button>
-</div>
-
-  <label for="userSelect">Выберите пользователя:</label>
-  <select id="userSelect">
-    <option value="">Загрузка пользователей...</option>
-  </select>
-
-  <label for="messageType">Тип сообщения:</label>
-  <select id="messageType">
-    <option value="похвала">Похвала</option>
-    <option value="выговор">Выговор</option>
-  </select>
-
-  <label for="messageText">Текст сообщения:</label>
-  <textarea id="messageText" rows="4" placeholder="Введите текст сообщения"></textarea>
-
-  <button id="sendMessageBtn">Отправить сообщение</button>
-
-  <div id="notifications">
-    <h3>Уведомления о новых регистрациях</h3>
-    <div id="registrationNotifications">Загрузка...</div>
+  <div id="header">
+    <button id="backBtn">← Назад</button>
+    <button id="logoutBtn">Выйти</button>
   </div>
 
+  <h2>Админ-панель</h2>
+  <ul id="usersList">Загрузка пользователей...</ul>
+
   <script>
-    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
-    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
-    const ADMIN_PHONE = '9004163928';
+    Backendless.initApp("DCA33B47-8058-4798-8EFA-40BE7FDE1DB3", "433B51A9-0249-48FE-96EF-C94A139DD378");
 
-    Backendless.initApp(APP_ID, API_KEY);
-document.getElementById('backBtn').addEventListener('click', () => {
-  window.location.href = 'index.html';
-});\
+    // Кнопка назад
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-  // Очищаем данные пользователя
-  localStorage.removeItem('user');  // если вы храните пользователя в localStorage
-  // При необходимости очистить и другие данные, например, Backendless.UserService.logout()
-  Backendless.UserService.logout()
-    .then(() => {
-      alert('Вы успешно вышли из аккаунта');
-      window.location.href = 'profile.html'; // Возврат на страницу входа/регистрации
-    })
-    .catch(err => {
-      console.error('Ошибка при выходе:', err);
+    // Кнопка выхода
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await Backendless.UserService.logout();
+      } catch(e) {
+        console.warn('Ошибка при выходе:', e);
+      }
+      localStorage.removeItem('user');
       window.location.href = 'profile.html';
     });
-});
-
 
     async function loadUsers() {
       try {
-        const users = await Backendless.Data.of('User').find();
-        const userSelect = document.getElementById('userSelect');
-        userSelect.innerHTML = '<option value="">-- Выберите пользователя --</option>';
-        users.forEach(user => {
-          if(user.phone !== ADMIN_PHONE) {
-            userSelect.innerHTML += `<option value="${user.objectId}" data-phone="${user.phone}">${user.phone} — ${user.email || ''}</option>`;
-          }
-        });
-      } catch (error) {
-        alert('Ошибка при загрузке пользователей: ' + error.message);
-      }
-    }
+        const users = await Backendless.UserService.find();
+        const usersList = document.getElementById('usersList');
+        usersList.innerHTML = '';
 
-    async function loadRegistrationNotifications() {
-      try {
-        const notifications = await Backendless.Data.of('Notifications').find({
-          whereClause: `type = 'регистрация'`,
-          sortBy: ['created DESC']
-        });
-        const container = document.getElementById('registrationNotifications');
-        if(notifications.length === 0) {
-          container.innerHTML = '<p>Нет новых регистраций</p>';
+        if (users.length === 0) {
+          usersList.textContent = 'Пользователи не найдены.';
           return;
         }
-        container.innerHTML = '';
-        notifications.forEach(n => {
-          container.innerHTML += `<div class="notification-item">${n.message} <small>(${new Date(n.created).toLocaleString()})</small></div>`;
+
+        users.forEach(user => {
+          const li = document.createElement('li');
+
+          // Информация о пользователе
+          const userInfo = document.createElement('div');
+          userInfo.className = 'user-info';
+          userInfo.textContent = `Имя: ${user.name || '-'} | Телефон: ${user.phone || '-'} | Рейтинг: ${user.rating || 0}`;
+          li.appendChild(userInfo);
+
+          // Кнопки для похвалы и выговора
+          const actions = document.createElement('div');
+          actions.className = 'action-buttons';
+
+          const praiseBtn = document.createElement('button');
+          praiseBtn.textContent = 'Похвала';
+          praiseBtn.className = 'praise';
+          praiseBtn.onclick = () => sendMessage(user.objectId, 'похвала');
+
+          const reprimandBtn = document.createElement('button');
+          reprimandBtn.textContent = 'Выговор';
+          reprimandBtn.className = 'reprimand';
+          reprimandBtn.onclick = () => sendMessage(user.objectId, 'выговор');
+
+          actions.appendChild(praiseBtn);
+          actions.appendChild(reprimandBtn);
+          li.appendChild(actions);
+
+          usersList.appendChild(li);
         });
       } catch (error) {
-        alert('Ошибка при загрузке уведомлений: ' + error.message);
+        console.error('Ошибка загрузки пользователей:', error);
+        document.getElementById('usersList').textContent = 'Ошибка загрузки пользователей';
       }
     }
 
-    async function sendMessage() {
-      const userSelect = document.getElementById('userSelect');
-      const messageType = document.getElementById('messageType').value;
-      const messageText = document.getElementById('messageText').value.trim();
-
-      if (!userSelect.value) {
-        alert('Пожалуйста, выберите пользователя');
-        return;
-      }
-      if (!messageText) {
-        alert('Введите текст сообщения');
-        return;
-      }
+    // Функция отправки сообщения пользователю с изменением рейтинга
+    async function sendMessage(userId, type) {
+      const message = prompt(`Введите сообщение для пользователя (${type}):`);
+      if (!message) return alert('Сообщение не может быть пустым.');
 
       try {
-        // Получаем выбранного пользователя
-        const userId = userSelect.value;
-        const user = await Backendless.Data.of('User').findById(userId);
+        // Получаем пользователя по objectId
+        const user = await Backendless.Data.of("Users").findById(userId);
 
-        // Сохраняем уведомление для пользователя
-        const notification = {
-          recipientPhone: user.phone,
-          message: messageText,
-          type: messageType
-        };
-        await Backendless.Data.of('Notifications').save(notification);
+        // Обновляем рейтинг в зависимости от типа
+        let newRating = user.rating || 0;
+        if (type === 'похвала') newRating += 1;
+        else if (type === 'выговор') newRating -= 1;
 
         // Обновляем рейтинг пользователя
-        let newRating = user.rating || 0;
-        if(messageType === 'похвала') newRating++;
-        else if(messageType === 'выговор') newRating--;
+        await Backendless.Data.of("Users").save({ objectId: userId, rating: newRating });
 
-        await Backendless.Data.of('User').save({...user, rating: newRating});
+        // Сохраняем уведомление (можно использовать отдельную таблицу, например Notifications)
+        await Backendless.Data.of("Notifications").save({
+          userId,
+          message,
+          type,
+          date: new Date()
+        });
 
-        alert('Сообщение отправлено');
-        document.getElementById('messageText').value = '';
-        loadUsers();
-        loadRegistrationNotifications();
-      } catch (error) {
-        alert('Ошибка при отправке сообщения: ' + error.message);
+        alert(`Сообщение отправлено. Рейтинг пользователя обновлён: ${newRating}`);
+        loadUsers(); // обновить список, чтобы отобразить рейтинг
+      } catch (err) {
+        console.error('Ошибка отправки сообщения:', err);
+        alert('Ошибка при отправке сообщения.');
       }
     }
 
-    document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
-
     loadUsers();
-    loadRegistrationNotifications();
   </script>
 </body>
 </html>
