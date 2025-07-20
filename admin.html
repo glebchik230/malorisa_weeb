@@ -1,106 +1,176 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Админ-панель</title>
+  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
   <style>
-    body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;background:#f9f0f7}
-    .container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px;text-align:left;border-bottom:1px solid #eee}
-    th{background:#f0d6e3}
-    button{padding:6px 12px;margin:2px;border:none;border-radius:6px;cursor:pointer}
-    .praise{background:#7acb8f;color:#fff}
-    .warn{background:#e57d7d;color:#fff}
-    .msg-box{margin-top:20px}
-    textarea{width:100%;padding:10px;margin:10px 0;border-radius:6px;border:1px solid #ccc;resize:none}
-    .back{margin-top:20px;text-align:center}
-    .back a{color:#999;text-decoration:none}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f0f7;
+      padding: 20px;
+      color: #333;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #cc6699;
+    }
+    select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #cc6699;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #b35588;
+    }
+    #notifications {
+      margin-top: 30px;
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      box-shadow: 0 0 10px rgba(204,102,153,0.3);
+    }
+    #notifications h3 {
+      margin-top: 0;
+      color: #cc6699;
+    }
+    .notification-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .notification-item:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Админ-панель</h2>
-    <p><strong>Выберите пользователя и отправьте сообщение:</strong></p>
-    <table id="userTable">
-      <thead>
-        <tr>
-          <th>Имя</th><th>Телефон</th><th>Рейтинг</th><th>Действия</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <h2>Админ-панель</h2>
 
-    <div class="msg-box" style="display:none" id="msgBox">
-      <h3 id="targetName">Сообщение для: </h3>
-      <textarea id="messageText" rows="3" placeholder="Введите сообщение..."></textarea>
-      <button id="sendBtn" class="praise">Отправить</button>
-    </div>
+  <label for="userSelect">Выберите пользователя:</label>
+  <select id="userSelect">
+    <option value="">Загрузка пользователей...</option>
+  </select>
 
-    <div class="back"><a href="profile.html">← Назад</a></div>
+  <label for="messageType">Тип сообщения:</label>
+  <select id="messageType">
+    <option value="похвала">Похвала</option>
+    <option value="выговор">Выговор</option>
+  </select>
+
+  <label for="messageText">Текст сообщения:</label>
+  <textarea id="messageText" rows="4" placeholder="Введите текст сообщения"></textarea>
+
+  <button id="sendMessageBtn">Отправить сообщение</button>
+
+  <div id="notifications">
+    <h3>Уведомления о новых регистрациях</h3>
+    <div id="registrationNotifications">Загрузка...</div>
   </div>
 
   <script>
-    const admin = JSON.parse(localStorage.getItem('user'));
-    if (!admin || admin.role !== 'admin') location.href = 'login.html';
+    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
+    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
+    const ADMIN_PHONE = '9004163928';
 
-    let selectedUser = null;
-    let selectedType = 'Похвала';
+    Backendless.initApp(APP_ID, API_KEY);
 
-    const tbody = document.querySelector('#userTable tbody');
-    const msgBox = document.getElementById('msgBox');
-    const sendBtn = document.getElementById('sendBtn');
-    const messageText = document.getElementById('messageText');
-    const targetName = document.getElementById('targetName');
-
-    function loadUsers() {
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      tbody.innerHTML = '';
-      users.forEach(u => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${u.name}</td>
-          <td>${u.phone}</td>
-          <td>${u.rating ?? 0}</td>
-          <td>
-            <button class="praise" onclick="startMessage('${u.phone}','Похвала')">Похвала</button>
-            <button class="warn" onclick="startMessage('${u.phone}','Выговор')">Выговор</button>
-          </td>`;
-        tbody.appendChild(tr);
-      });
+    async function loadUsers() {
+      try {
+        const users = await Backendless.Data.of('Users').find();
+        const userSelect = document.getElementById('userSelect');
+        userSelect.innerHTML = '<option value="">-- Выберите пользователя --</option>';
+        users.forEach(user => {
+          if(user.phone !== ADMIN_PHONE) {
+            userSelect.innerHTML += `<option value="${user.objectId}" data-phone="${user.phone}">${user.phone} — ${user.email || ''}</option>`;
+          }
+        });
+      } catch (error) {
+        alert('Ошибка при загрузке пользователей: ' + error.message);
+      }
     }
 
-    window.startMessage = function(phone, type) {
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      selectedUser = users.find(u => u.phone === phone);
-      if (!selectedUser) return alert('Ошибка: пользователь не найден');
+    async function loadRegistrationNotifications() {
+      try {
+        const notifications = await Backendless.Data.of('Notifications').find({
+          whereClause: `type = 'регистрация'`,
+          sortBy: ['created DESC']
+        });
+        const container = document.getElementById('registrationNotifications');
+        if(notifications.length === 0) {
+          container.innerHTML = '<p>Нет новых регистраций</p>';
+          return;
+        }
+        container.innerHTML = '';
+        notifications.forEach(n => {
+          container.innerHTML += `<div class="notification-item">${n.message} <small>(${new Date(n.created).toLocaleString()})</small></div>`;
+        });
+      } catch (error) {
+        alert('Ошибка при загрузке уведомлений: ' + error.message);
+      }
+    }
 
-      selectedType = type;
-      targetName.textContent = `${type} для: ${selectedUser.name}`;
-      sendBtn.textContent = `Отправить (${type})`;
-      sendBtn.className = type === 'Похвала' ? 'praise' : 'warn';
-      messageText.value = '';
-      msgBox.style.display = 'block';
-    };
+    async function sendMessage() {
+      const userSelect = document.getElementById('userSelect');
+      const messageType = document.getElementById('messageType').value;
+      const messageText = document.getElementById('messageText').value.trim();
 
-    sendBtn.onclick = () => {
-      const msg = messageText.value.trim();
-      if (!msg) return alert('Введите сообщение!');
-      const all = JSON.parse(localStorage.getItem('users') || '[]');
-      const i = all.findIndex(u => u.phone === selectedUser.phone);
-      if (i === -1) return alert('Пользователь не найден');
+      if (!userSelect.value) {
+        alert('Пожалуйста, выберите пользователя');
+        return;
+      }
+      if (!messageText) {
+        alert('Введите текст сообщения');
+        return;
+      }
 
-      all[i].notifications = all[i].notifications || [];
-      all[i].notifications.push(`${selectedType}: ${msg}`);
-      all[i].rating = (all[i].rating ?? 0) + (selectedType === 'Похвала' ? 1 : -1);
-      localStorage.setItem('users', JSON.stringify(all));
-      msgBox.style.display = 'none';
-      loadUsers();
-      alert('Сообщение отправлено!');
-    };
+      try {
+        // Получаем выбранного пользователя
+        const userId = userSelect.value;
+        const user = await Backendless.Data.of('Users').findById(userId);
+
+        // Сохраняем уведомление для пользователя
+        const notification = {
+          recipientPhone: user.phone,
+          message: messageText,
+          type: messageType
+        };
+        await Backendless.Data.of('Notifications').save(notification);
+
+        // Обновляем рейтинг пользователя
+        let newRating = user.rating || 0;
+        if(messageType === 'похвала') newRating++;
+        else if(messageType === 'выговор') newRating--;
+
+        await Backendless.Data.of('Users').save({...user, rating: newRating});
+
+        alert('Сообщение отправлено');
+        document.getElementById('messageText').value = '';
+        loadUsers();
+        loadRegistrationNotifications();
+      } catch (error) {
+        alert('Ошибка при отправке сообщения: ' + error.message);
+      }
+    }
+
+    document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
 
     loadUsers();
+    loadRegistrationNotifications();
   </script>
 </body>
 </html>
