@@ -60,6 +60,15 @@
 </head>
 <body>
   <h2>Админ-панель</h2>
+   <button id="backBtn" style="
+    background: none; 
+    border: none; 
+    color: #cc6699; 
+    font-size: 18px; 
+    cursor: pointer; 
+    margin-bottom: 20px;
+    padding: 0;
+  ">← Назад</button>
 
   <label for="userSelect">Выберите пользователя:</label>
   <select id="userSelect">
@@ -88,6 +97,9 @@
     const ADMIN_PHONE = '9004163928';
 
     Backendless.initApp(APP_ID, API_KEY);
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
 
     async function loadUsers() {
       try {
