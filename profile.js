@@ -1,96 +1,72 @@
-// Получаем элементы из DOM
-const profileFormSection = document.getElementById('profile-form-section');
-const profileViewSection = document.getElementById('profile-view-section');
-
-const profileForm = document.getElementById('profile-form');
-const avatarInput = document.getElementById('avatar-input');
-const avatarPreview = document.getElementById('avatar-preview');
-
-const displayName = document.getElementById('display-name');
-const displayPhone = document.getElementById('display-phone');
-const displayTelegramId = document.getElementById('display-telegramId');
-const employeeRating = document.getElementById('employee-rating');
-
-const editProfileBtn = document.getElementById('edit-profile-btn');
-const btnHome = document.getElementById('btn-home');
-
-// Переменная для хранения данных пользователя
+// Эта часть отвечает за сохранение данных пользователя
 let userData = {
-  avatar: '',
   name: '',
   phone: '',
   telegramId: '',
-  rating: '★★★★☆'  // Пример рейтинга
+  avatar: '',
+  rating: '0.0 ⭐' // начальный рейтинг сотрудника
 };
 
-// Показываем или скрываем секции
-function showProfileView() {
-  profileFormSection.style.display = 'none';
-  profileViewSection.style.display = 'block';
+// Получаем элементы формы и просмотра
+const profileForm = document.getElementById('profile-form');
+const profileFormSection = document.getElementById('profile-form-section');
+const profileViewSection = document.getElementById('profile-view-section');
 
-  // Отображаем данные пользователя
-  avatarPreview.src = userData.avatar || 'default-avatar.png'; // Путь к аватару по умолчанию
-  displayName.textContent = userData.name;
-  displayPhone.textContent = userData.phone;
-  displayTelegramId.textContent = userData.telegramId;
-  employeeRating.textContent = userData.rating;
-}
+// Прикрепляем обработчик отправки формы
+profileForm.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-function showProfileForm() {
-  profileFormSection.style.display = 'block';
-  profileViewSection.style.display = 'none';
+  // Считываем данные из формы
+  userData.name = document.getElementById('name').value;
+  userData.phone = document.getElementById('phone').value;
+  userData.telegramId = document.getElementById('telegramId').value;
 
-  // Заполняем форму текущими данными
-  avatarPreview.src = userData.avatar || 'default-avatar.png';
-  profileForm.name.value = userData.name;
-  profileForm.phone.value = userData.phone;
-  profileForm.telegramId.value = userData.telegramId;
-}
-
-// Обработчик загрузки аватарки
-avatarInput.addEventListener('change', () => {
+  // Работа с аватаркой
+  const avatarInput = document.getElementById('avatar');
   const file = avatarInput.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = e => {
-      userData.avatar = e.target.result; // base64
-      avatarPreview.src = userData.avatar;
+    reader.onload = function () {
+      userData.avatar = reader.result;
+      showProfileView(); // Показать личный кабинет после загрузки аватарки
     };
     reader.readAsDataURL(file);
+  } else {
+    userData.avatar = ''; // если аватарка не загружена
+    showProfileView();
   }
 });
 
-// Обработчик отправки формы регистрации/редактирования
-profileForm.addEventListener('submit', e => {
-  e.preventDefault();
-  // Получаем значения из формы
-  const name = profileForm.name.value.trim();
-  const phone = profileForm.phone.value.trim();
-  const telegramId = profileForm.telegramId.value.trim();
+// Эта функция показывает личный кабинет с данными
+function showProfileView() {
+  document.getElementById('profile-name').textContent = userData.name;
+  document.getElementById('profile-phone').textContent = userData.phone;
+  document.getElementById('profile-telegramId').textContent = userData.telegramId;
+  document.getElementById('profile-rating').textContent = userData.rating;
 
-  if (!name || !phone || !telegramId) {
-    alert('Пожалуйста, заполните все поля.');
-    return;
+  // Устанавливаем аватар (если есть)
+  const avatarPreview = document.getElementById('profile-avatar');
+  if (userData.avatar) {
+    avatarPreview.src = userData.avatar;
+  } else {
+    avatarPreview.src = 'default-avatar.png'; // путь к изображению по умолчанию
   }
 
-  // Сохраняем данные пользователя (в памяти)
-  userData.name = name;
-  userData.phone = phone;
-  userData.telegramId = telegramId;
+  // Переключение секций
+  profileFormSection.style.display = 'none';
+  profileViewSection.style.display = 'block';
+}
 
-  // Переходим к просмотру профиля
-  showProfileView();
-});
-
-// Обработчик кнопки редактирования
-editProfileBtn.addEventListener('click', () => {
-  showProfileForm();
+// Кнопка "Редактировать профиль"
+const editBtn = document.getElementById('edit-profile-btn');
+editBtn.addEventListener('click', () => {
+  profileFormSection.style.display = 'block';
+  profileViewSection.style.display = 'none';
 });
 
 // Кнопка "На главный экран"
-btnHome.addEventListener('click', () => {
-  window.location.href = 'index.html';
+const homeBtn = document.getElementById('btn-home');
+homeBtn.addEventListener('click', () => {
+  window.location.href = 'index.html'; // переадресация на главную страницу
 });
 
-// При загрузке страницы показываем форму регистрации по умолчанию
-showProfileForm();
