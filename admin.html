@@ -69,6 +69,18 @@
     margin-bottom: 20px;
     padding: 0;
   ">← Назад</button>
+  
+  <button id="logoutBtn" style="
+    background-color: #cc6699;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  ">Выйти</button>
+</div>
 
   <label for="userSelect">Выберите пользователя:</label>
   <select id="userSelect">
@@ -99,7 +111,23 @@
     Backendless.initApp(APP_ID, API_KEY);
 document.getElementById('backBtn').addEventListener('click', () => {
   window.location.href = 'index.html';
+});\
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+  // Очищаем данные пользователя
+  localStorage.removeItem('user');  // если вы храните пользователя в localStorage
+  // При необходимости очистить и другие данные, например, Backendless.UserService.logout()
+  Backendless.UserService.logout()
+    .then(() => {
+      alert('Вы успешно вышли из аккаунта');
+      window.location.href = 'profile.html'; // Возврат на страницу входа/регистрации
+    })
+    .catch(err => {
+      console.error('Ошибка при выходе:', err);
+      window.location.href = 'profile.html';
+    });
 });
+
 
     async function loadUsers() {
       try {
