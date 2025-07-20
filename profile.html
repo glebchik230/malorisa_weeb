@@ -1,55 +1,60 @@
+<!-- profile.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Личный кабинет</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="profile.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Регистрация / Вход</title>
+  <link rel="stylesheet" href="profile.css" />
 </head>
 <body>
   <div class="container">
+    <h1>Добро пожаловать</h1>
 
-    <!-- 📋 Раздел регистрации -->
-    <section id="profile-form-section">
-      <h2>Регистрация</h2>
-      <form id="profile-form" class="profile-form">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" required />
+    <!-- Загрузка аватарки -->
+    <div class="form-group">
+      <label for="avatar">Аватарка:</label>
+      <input type="file" id="avatar" accept="image/*" />
+    </div>
 
-        <label for="phone">Номер телефона:</label>
-        <input type="tel" id="phone" required />
+    <!-- Имя -->
+    <div class="form-group">
+      <label for="name">Имя:</label>
+      <input type="text" id="name" placeholder="Введите имя" />
+    </div>
 
-        <label for="telegramId">Telegram ID:</label>
-        <input type="text" id="telegramId" required />
+    <!-- Телефон -->
+    <div class="form-group">
+      <label for="phone">Номер телефона:</label>
+      <input type="text" id="phone" placeholder="Введите номер" />
+    </div>
 
-        <label for="avatar">Загрузить аватар:</label>
-        <input type="file" id="avatar" accept="image/*" />
+    <!-- Пароль -->
+    <div class="form-group">
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" placeholder="Придумайте пароль" />
+    </div>
 
-        <button type="submit" class="btn">Зарегистрироваться</button>
-      </form>
-    </section>
+    <!-- Подтверждение пароля -->
+    <div class="form-group">
+      <label for="confirmPassword">Подтвердите пароль:</label>
+      <input type="password" id="confirmPassword" placeholder="Повторите пароль" />
+    </div>
 
-    <!-- 👤 Раздел отображения профиля -->
-    <section id="profile-view-section" style="display: none;">
-      <h2>Личный кабинет</h2>
+    <!-- Кнопки -->
+    <div class="button-group">
+      <button onclick="register()">Зарегистрироваться</button>
+      <button onclick="login()">Войти</button>
+    </div>
 
-      <div class="profile-box">
-        <img id="profile-avatar" class="avatar" src="default-avatar.png" alt="Аватар" />
-        <p><strong>Имя:</strong> <span id="profile-name"></span></p>
-        <p><strong>Телефон:</strong> <span id="profile-phone"></span></p>
-        <p><strong>Telegram ID:</strong> <span id="profile-telegramId"></span></p>
-        <p><strong>Рейтинг:</strong> <span id="profile-rating"></span></p>
-      </div>
-
-      <div class="button-group">
-        <button id="edit-profile-btn" class="btn">Редактировать</button>
-        <button id="btn-home" class="btn">На главный экран</button>
-      </div>
-    </section>
+    <!-- Сообщение об ошибке/успехе -->
+    <p id="message" class="message"></p>
   </div>
+
+  <script src="profile.js"></script>
 </body>
 </html>
+
 
 
 
