@@ -1,93 +1,51 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Вход</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f0f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .login-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #cc6699;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #b35588;
-    }
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;display:flex;align-items:center;justify-content:center;height:100vh}
+    .box{background:#fff;padding:30px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);width:100%;max-width:360px}
+    input{width:100%;padding:10px;margin:10px 0;border:1px solid #ccc;border-radius:8px}
+    button{width:100%;padding:12px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:16px}
+    button:hover{background:#b35588}
+    .error{color:red;margin-top:10px;height:18px}
+    .back{margin-top:15px;text-align:center}
+    .back a{color:#999;text-decoration:none}
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Вход в систему</h2>
-    <input type="tel" id="login-phone" placeholder="Телефон" required>
-    <input type="password" id="login-password" placeholder="Пароль" required>
+  <div class="box">
+    <h2>Вход</h2>
+    <input id="phone" type="tel" placeholder="Телефон"/>
+    <input id="pass" type="password" placeholder="Пароль"/>
     <button onclick="login()">Войти</button>
-    <p class="error" id="error-msg"></p>
+    <p id="err" class="error"></p>
+    <div class="back"><a href="profile.html">← Назад</a></div>
   </div>
-
   <script>
     function login() {
-      const phone = document.getElementById("login-phone").value;
-      const password = document.getElementById("login-password").value;
-      const errorMsg = document.getElementById("error-msg");
+      const ph = document.getElementById('phone').value.trim();
+      const ps = document.getElementById('pass').value;
+      const err = document.getElementById('err');
+      err.textContent = '';
 
-      // Проверка на админа
-      if (phone === "9004163928" && password === "123") {
-        localStorage.setItem("user", JSON.stringify({
-          phone,
-          password,
-          role: "admin"
-        }));
-        window.location.href = "admin.html";
-        return;
+      if (ph==='9004163928' && ps==='123') {
+        localStorage.setItem('user', JSON.stringify({phone:ph,role:'admin'}));
+        location.href='admin.html'; return;
       }
 
-      // Проверка обычного пользователя
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find(u => u.phone === phone && u.password === password);
+      const usr = JSON.parse(localStorage.getItem('users')||'[]')
+        .find(u=>u.phone===ph && u.password===ps);
 
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "cabinet.html";
-      } else {
-        errorMsg.textContent = "Неверный телефон или пароль";
-      }
+      if (!usr) {err.textContent='Неверные данные'; return;}
+      localStorage.setItem('user', JSON.stringify(usr));
+      location.href = 'cabinet.html';
     }
   </script>
 </body>
 </html>
+
 
 
