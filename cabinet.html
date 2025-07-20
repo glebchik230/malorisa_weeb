@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Личный кабинет</title>
   <style>
     body {
@@ -10,101 +10,145 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f9f0f7;
       color: #333;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
     }
-
     .cabinet-container {
       background-color: #fff;
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      text-align: center;
       max-width: 400px;
       width: 100%;
+      box-sizing: border-box;
+      text-align: center;
     }
-
     .avatar {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      border: 3px solid #cc6699;
     }
-
-    .username {
-      font-size: 20px;
-      font-weight: bold;
+    h1 {
       color: #cc6699;
       margin-bottom: 10px;
     }
-
     .rating {
-      font-size: 18px;
-      color: #ffaa00;
+      font-size: 20px;
       margin-bottom: 20px;
     }
-
-    .button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+    button {
+      padding: 12px 25px;
       border: none;
       border-radius: 10px;
       background-color: #cc6699;
       color: white;
       font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      margin: 10px 5px;
+      transition: background-color 0.3s ease;
     }
-
-    .button:hover {
+    button:hover {
       background-color: #b35588;
     }
-
-    .back-link {
+    #notificationsList {
       margin-top: 20px;
-      display: inline-block;
-      color: #999;
-      text-decoration: none;
-      font-size: 14px;
+      max-width: 100%;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
     }
-
-    .back-link:hover {
-      color: #666;
+    #notificationsList ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    #notificationsList li {
+      padding: 8px 5px;
+      border-bottom: 1px solid #eee;
+    }
+    #notificationsList li:last-child {
+      border-bottom: none;
+    }
+    #notificationsList h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #cc6699;
     }
   </style>
 </head>
 <body>
-  <div class="cabinet-container" id="cabinet">
-    <!-- Контент профиля будет загружен через JS -->
+  <div class="cabinet-container">
+    <img id="avatar" class="avatar" src="" alt="Аватар" />
+    <h1 id="userName"></h1>
+    <div class="rating">Рейтинг: <span id="ratingValue">0</span></div>
+
+    <button id="showNotifications">Уведомления</button>
+    <button id="logoutBtn">Выйти из аккаунта</button>
+    <button id="backBtn">← Назад</button>
+
+    <div id="notificationsList" style="display:none;">
+      <h3>Уведомления</h3>
+      <ul id="notifications"></ul>
+      <button id="closeNotifications">Закрыть</button>
+    </div>
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    const container = document.getElementById("cabinet");
-
+    // Загрузка данных пользователя из localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
-      // если пользователь не найден — вернуть на профиль
-      window.location.href = "profile.html";
+      // Если пользователь не залогинен, отправляем на профиль
+      window.location.href = 'profile.html';
     } else {
-      container.innerHTML = `
-        <img src="${user.avatar}" class="avatar" alt="Аватар">
-        <div class="username">${user.name}</div>
-        <div class="rating">⭐ 4.6 / 5.0</div>
-        <button class="button" onclick="logout()">Выйти</button>
-        <a href="index.html" class="back-link">← Назад на главную</a>
-      `;
+      document.getElementById('avatar').src = user.avatar;
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('ratingValue').textContent = user.rating || 0;
     }
 
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = "profile.html";
-    }
+    const showBtn = document.getElementById('showNotifications');
+    const notifList = document.getElementById('notificationsList');
+    const notifUl = document.getElementById('notifications');
+    const closeBtn = document.getElementById('closeNotifications');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const backBtn = document.getElementById('backBtn');
+
+    showBtn.addEventListener('click', () => {
+      notifUl.innerHTML = '';
+      if (user.notifications && user.notifications.length > 0) {
+        user.notifications.forEach(n => {
+          const li = document.createElement('li');
+          li.textContent = `[${n.date}] ${n.type}: ${n.message}`;
+          notifUl.appendChild(li);
+        });
+      } else {
+        notifUl.innerHTML = '<li>Нет уведомлений</li>';
+      }
+      notifList.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      notifList.style.display = 'none';
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('user');
+      window.location.href = 'profile.html';
+    });
+
+    backBtn.addEventListener('click', () => {
+      window.history.back();
+    });
   </script>
 </body>
 </html>
+
 
