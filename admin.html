@@ -91,7 +91,7 @@
 
     async function loadUsers() {
       try {
-        const users = await Backendless.Data.of('Users').find();
+        const users = await Backendless.Data.of('User').find();
         const userSelect = document.getElementById('userSelect');
         userSelect.innerHTML = '<option value="">-- Выберите пользователя --</option>';
         users.forEach(user => {
@@ -141,7 +141,7 @@
       try {
         // Получаем выбранного пользователя
         const userId = userSelect.value;
-        const user = await Backendless.Data.of('Users').findById(userId);
+        const user = await Backendless.Data.of('User').findById(userId);
 
         // Сохраняем уведомление для пользователя
         const notification = {
@@ -156,7 +156,7 @@
         if(messageType === 'похвала') newRating++;
         else if(messageType === 'выговор') newRating--;
 
-        await Backendless.Data.of('Users').save({...user, rating: newRating});
+        await Backendless.Data.of('User').save({...user, rating: newRating});
 
         alert('Сообщение отправлено');
         document.getElementById('messageText').value = '';
