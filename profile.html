@@ -2,54 +2,52 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Личный кабинет — Малориса</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Личный кабинет</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="profile.js"></script>
 </head>
 <body>
-  <main class="profile-container">
+  <div class="container">
 
-    <!-- Форма регистрации/редактирования -->
+    <!-- 📋 Раздел регистрации -->
     <section id="profile-form-section">
-      <h2>Регистрация / Редактирование профиля</h2>
-      <form id="profile-form" enctype="multipart/form-data">
-        <label>
-          Имя:<br />
-          <input type="text" id="name" name="name" required />
-        </label>
-        <label>
-          Номер телефона:<br />
-          <input type="tel" id="phone" name="phone" required />
-        </label>
-        <label>
-          Telegram ID:<br />
-          <input type="text" id="telegramId" name="telegramId" required />
-        </label>
-        <label>
-          Аватарка:<br />
-          <input type="file" id="avatar" name="avatar" accept="image/*" />
-        </label>
-        <button type="submit" class="btn btn-submit">Сохранить</button>
+      <h2>Регистрация</h2>
+      <form id="profile-form" class="profile-form">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" required />
+
+        <label for="phone">Номер телефона:</label>
+        <input type="tel" id="phone" required />
+
+        <label for="telegramId">Telegram ID:</label>
+        <input type="text" id="telegramId" required />
+
+        <label for="avatar">Загрузить аватар:</label>
+        <input type="file" id="avatar" accept="image/*" />
+
+        <button type="submit" class="btn">Зарегистрироваться</button>
       </form>
     </section>
 
-    <!-- Просмотр профиля -->
-    <section id="profile-view-section" style="display:none;">
-      <h2>Ваш профиль</h2>
-      <div class="profile-info">
-        <img id="avatar-preview" src="" alt="Аватарка" class="avatar" />
-        <p><strong>Имя:</strong> <span id="display-name"></span></p>
-        <p><strong>Телефон:</strong> <span id="display-phone"></span></p>
-        <p><strong>Telegram ID:</strong> <span id="display-telegramId"></span></p>
-        <p><strong>Рейтинг сотрудника:</strong> <span id="employee-rating">★★★★☆</span></p>
+    <!-- 👤 Раздел отображения профиля -->
+    <section id="profile-view-section" style="display: none;">
+      <h2>Личный кабинет</h2>
+
+      <div class="profile-box">
+        <img id="profile-avatar" class="avatar" src="default-avatar.png" alt="Аватар" />
+        <p><strong>Имя:</strong> <span id="profile-name"></span></p>
+        <p><strong>Телефон:</strong> <span id="profile-phone"></span></p>
+        <p><strong>Telegram ID:</strong> <span id="profile-telegramId"></span></p>
+        <p><strong>Рейтинг:</strong> <span id="profile-rating"></span></p>
       </div>
-      <button id="edit-profile-btn" class="btn">Редактировать</button>
-      <button id="btn-home" class="btn">На главный экран</button>
+
+      <div class="button-group">
+        <button id="edit-profile-btn" class="btn">Редактировать</button>
+        <button id="btn-home" class="btn">На главный экран</button>
+      </div>
     </section>
-
-  </main>
-
-  <script src="profile.js"></script>
+  </div>
 </body>
 </html>
 
