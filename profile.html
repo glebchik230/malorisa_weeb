@@ -1,55 +1,17 @@
-<!-- profile.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Регистрация / Вход</title>
-  <link rel="stylesheet" href="profile.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Профиль</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Добро пожаловать</h1>
 
-    <!-- Загрузка аватарки -->
-    <div class="form-group">
-      <label for="avatar">Аватарка:</label>
-      <input type="file" id="avatar" accept="image/*" />
-    </div>
+  <h1>Личный кабинет</h1>
 
-    <!-- Имя -->
-    <div class="form-group">
-      <label for="name">Имя:</label>
-      <input type="text" id="name" placeholder="Введите имя" />
-    </div>
+  <div id="profile-info"></div>
 
-    <!-- Телефон -->
-    <div class="form-group">
-      <label for="phone">Номер телефона:</label>
-      <input type="text" id="phone" placeholder="Введите номер" />
-    </div>
-
-    <!-- Пароль -->
-    <div class="form-group">
-      <label for="password">Пароль:</label>
-      <input type="password" id="password" placeholder="Придумайте пароль" />
-    </div>
-
-    <!-- Подтверждение пароля -->
-    <div class="form-group">
-      <label for="confirmPassword">Подтвердите пароль:</label>
-      <input type="password" id="confirmPassword" placeholder="Повторите пароль" />
-    </div>
-
-    <!-- Кнопки -->
-    <div class="button-group">
-      <button onclick="register()">Зарегистрироваться</button>
-      <button onclick="login()">Войти</button>
-    </div>
-
-    <!-- Сообщение об ошибке/успехе -->
-    <p id="message" class="message"></p>
-  </div>
+  <button id="logout-btn">Выйти</button>
 
   <script src="profile.js"></script>
 </body>
