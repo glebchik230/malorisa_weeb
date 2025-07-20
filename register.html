@@ -1,44 +1,85 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Регистрация</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Регистрация — Малориса</title>
+  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
   <style>
-    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;display:flex;align-items:center;justify-content:center;height:100vh}
-    .box{background:#fff;padding:30px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);width:100%;max-width:360px;box-sizing:border-box}
-    input{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
-    button{width:100%;padding:12px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:16px}
-    button:hover{background:#b35588}
-    .back{margin-top:12px;text-align:center}
-    .back a{color:#999;text-decoration:none}
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6f0;
+      padding: 20px;
+      text-align: center;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 8px;
+      width: 80%;
+    }
+    button {
+      padding: 10px 20px;
+      background: #f08ca4;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e76c8c;
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>Регистрация</h2>
-    <input id="name" type="text" placeholder="Имя"/>
-    <input id="phone" type="tel" placeholder="Телефон"/>
-    <input id="pass" type="password" placeholder="Пароль"/>
-    <input id="confirm" type="password" placeholder="Подтвердите пароль"/>
-    <button onclick="reg()">Зарегистрироваться</button>
-    <div class="back"><a href="profile.html">← Назад</a></div>
-  </div>
+  <h2>Регистрация пользователя</h2>
+  <form id="registerForm">
+    <input type="text" id="phone" placeholder="Телефон" required />
+    <input type="password" id="password" placeholder="Пароль" required />
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+
   <script>
-    function reg() {
-      const n=document.getElementById('name').value.trim();
-      const ph=document.getElementById('phone').value.trim();
-      const p=document.getElementById('pass').value;
-      const c=document.getElementById('confirm').value;
-      if(!n||!ph||!p||p!==c){alert('Проверьте данные.');return;}
-      const users=JSON.parse(localStorage.getItem('users')||'[]');
-      if(users.some(u=>u.phone===ph)){alert('Такой номер уже есть');return;}
-      const u={name:n,phone:ph,password:p,role:'user',rating:0,notifications:[]};
-      users.push(u);
-      localStorage.setItem('users',JSON.stringify(users));
-      localStorage.setItem('user',JSON.stringify(u));
-      location.href='cabinet.html';
-    }
+    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
+    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
+    const ADMIN_PHONE = '9004163928';
+
+    Backendless.initApp(APP_ID, API_KEY);
+
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+
+      const user = new Backendless.User();
+      user.password = password;
+      user.phone = phone;
+      user.email = phone + '@example.com';
+      user.rating = 0;
+
+      try {
+        const registeredUser = await Backendless.UserService.register(user);
+
+        // Уведомление для админа о новой регистрации
+        const adminObject = {
+          recipientPhone: ADMIN_PHONE,
+          message: `Новый пользователь зарегистрировался: ${phone}`,
+          type: 'регистрация'
+        };
+        await Backendless.Data.of("Notifications").save(adminObject);
+
+        alert("Регистрация успешна. Теперь войдите.");
+        window.location.href = "profile.html";
+      } catch (err) {
+        alert("Ошибка: " + err.message);
+      }
+    });
   </script>
 </body>
 </html>
