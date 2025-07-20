@@ -2,123 +2,92 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Вход</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f9f0f7;
-      color: #333;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
+      margin: 0;
     }
-    .form-container {
-      background-color: #fff;
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 100%;
       max-width: 400px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    h2 {
       text-align: center;
-      color: #cc6699;
-      margin-bottom: 20px;
     }
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: 600;
-    }
-    input[type="tel"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1.5px solid #d6b8d8;
-      border-radius: 8px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 25px;
+    input {
       width: 100%;
       padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #cc6699;
+      color: #fff;
       border: none;
       border-radius: 10px;
-      background-color: #cc6699;
-      color: white;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #b35588;
     }
-    .back-link {
-      margin-top: 15px;
-      text-align: center;
-    }
-    .back-link a {
-      color: #999;
-      font-size: 14px;
-      text-decoration: none;
-    }
-    .back-link a:hover {
-      color: #666;
+    .error {
+      color: red;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Вход</h2>
-    <form id="loginForm">
-      <label for="login-phone">Телефон</label>
-      <input type="tel" id="login-phone" required />
-
-      <label for="login-password">Пароль</label>
-      <input type="password" id="login-password" required />
-
-      <button type="submit">Войти</button>
-    </form>
-    <div class="back-link">
-      <a href="profile.html">← Назад</a>
-    </div>
+  <div class="login-box">
+    <h2>Вход в систему</h2>
+    <input type="tel" id="login-phone" placeholder="Телефон" required>
+    <input type="password" id="login-password" placeholder="Пароль" required>
+    <button onclick="login()">Войти</button>
+    <p class="error" id="error-msg"></p>
   </div>
 
   <script>
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault();
+    function login() {
+      const phone = document.getElementById("login-phone").value;
+      const password = document.getElementById("login-password").value;
+      const errorMsg = document.getElementById("error-msg");
 
-      const phone = document.getElementById('login-phone').value.trim();
-      const password = document.getElementById('login-password').value;
+      // Проверка на админа
+      if (phone === "9004163928" && password === "123") {
+        localStorage.setItem("user", JSON.stringify({
+          phone,
+          password,
+          role: "admin"
+        }));
+        window.location.href = "admin.html";
+        return;
+      }
 
-      // Получаем массив пользователей
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-
-      // Ищем пользователя по номеру и паролю
+      // Проверка обычного пользователя
+      const users = JSON.parse(localStorage.getItem("users")) || [];
       const user = users.find(u => u.phone === phone && u.password === password);
 
       if (user) {
-        // Сохраняем текущего пользователя
-        localStorage.setItem('user', JSON.stringify(user));
-
-        // Если админ — перенаправляем на admin.html
-        if (phone === '9004163928' && password === '123') {
-          window.location.href = 'admin.html';
-        } else {
-          window.location.href = 'cabinet.html';
-        }
+        localStorage.setItem("user", JSON.stringify(user));
+        window.location.href = "cabinet.html";
       } else {
-        alert('Неверный номер или пароль!');
+        errorMsg.textContent = "Неверный телефон или пароль";
       }
-    });
+    }
   </script>
 </body>
 </html>
+
 
