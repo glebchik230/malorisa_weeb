@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Вход</title>
   <style>
     body {
@@ -15,39 +15,37 @@
       align-items: center;
       min-height: 100vh;
     }
-
     .form-container {
       background-color: #fff;
-      padding: 30px;
+      padding: 30px 40px;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
       max-width: 400px;
       width: 100%;
+      box-sizing: border-box;
     }
-
     h2 {
       text-align: center;
       color: #cc6699;
       margin-bottom: 20px;
     }
-
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 12px;
       font-weight: 600;
     }
-
-    input {
+    input[type="tel"],
+    input[type="password"] {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border: 1.5px solid #d6b8d8;
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
-
     button {
-      margin-top: 20px;
+      margin-top: 25px;
       width: 100%;
       padding: 12px;
       border: none;
@@ -56,25 +54,21 @@
       color: white;
       font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #b35588;
     }
-
-    .back {
+    .back-link {
       margin-top: 15px;
       text-align: center;
     }
-
-    .back a {
+    .back-link a {
       color: #999;
       font-size: 14px;
       text-decoration: none;
     }
-
-    .back a:hover {
+    .back-link a:hover {
       color: #666;
     }
   </style>
@@ -83,34 +77,45 @@
   <div class="form-container">
     <h2>Вход</h2>
     <form id="loginForm">
-      <label for="phone">Телефон:</label>
-      <input type="tel" id="phone" required />
+      <label for="login-phone">Телефон</label>
+      <input type="tel" id="login-phone" required />
 
-      <label for="password">Пароль:</label>
-      <input type="password" id="password" required />
+      <label for="login-password">Пароль</label>
+      <input type="password" id="login-password" required />
 
       <button type="submit">Войти</button>
     </form>
-    <div class="back">
-      <a href="index.html">← Назад на главную</a>
+    <div class="back-link">
+      <a href="profile.html">← Назад</a>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById("loginForm");
-
-    form.addEventListener("submit", function (e) {
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', e => {
       e.preventDefault();
 
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
+      const phone = document.getElementById('login-phone').value.trim();
+      const password = document.getElementById('login-password').value;
 
-      const user = JSON.parse(localStorage.getItem("user"));
+      // Получаем массив пользователей
+      const users = JSON.parse(localStorage.getItem('users')) || [];
 
-      if (user && user.phone === phone && user.password === password) {
-        window.location.href = "cabinet.html";
+      // Ищем пользователя по номеру и паролю
+      const user = users.find(u => u.phone === phone && u.password === password);
+
+      if (user) {
+        // Сохраняем текущего пользователя
+        localStorage.setItem('user', JSON.stringify(user));
+
+        // Если админ — перенаправляем на admin.html
+        if (phone === '9004163928' && password === '123') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'cabinet.html';
+        }
       } else {
-        alert("Неверный телефон или пароль!");
+        alert('Неверный номер или пароль!');
       }
     });
   </script>
