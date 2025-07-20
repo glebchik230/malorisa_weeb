@@ -5,85 +5,241 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Профиль — Вход и регистрация</title>
   <style>
-    .form-section { display: none; }
-    .form-section.active { display: block; }
-    button { margin: 5px; }
+    /* Общие стили */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f0f7; /* нежный светло-розовый фон */
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      width: 380px;
+      padding: 30px 25px 40px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #a76ca8; /* мягкий фиолетовый */
+      font-weight: 700;
+    }
+
+    /* Кнопки переключения */
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .toggle-buttons button {
+      background: transparent;
+      border: 2px solid #a76ca8;
+      color: #a76ca8;
+      padding: 8px 24px;
+      margin: 0 8px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-buttons button.active,
+    .toggle-buttons button:hover {
+      background-color: #a76ca8;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(167,108,168,0.4);
+    }
+
+    /* Формы */
+    form {
+      display: none;
+      flex-direction: column;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    label {
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="file"] {
+      padding: 10px 12px;
+      border: 1.8px solid #d6b8d8;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="password"]:focus,
+    input[type="file"]:focus {
+      border-color: #a76ca8;
+      box-shadow: 0 0 6px rgba(167,108,168,0.5);
+    }
+
+    button[type="submit"] {
+      margin-top: 25px;
+      padding: 12px 0;
+      background-color: #a76ca8;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(167,108,168,0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #8b559a;
+    }
+
+    /* Профиль */
+    #userProfile {
+      text-align: center;
+      padding-top: 10px;
+    }
+
+    #userProfile h2 {
+      color: #a76ca8;
+      margin-bottom: 20px;
+    }
+
+    #userProfile img {
+      border-radius: 50%;
+      border: 3px solid #a76ca8;
+      margin-bottom: 15px;
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      box-shadow: 0 0 10px rgba(167,108,168,0.5);
+    }
+
+    #userProfile p {
+      font-size: 1rem;
+      margin: 6px 0;
+      color: #5e3a6a;
+    }
+
+    #logoutBtn {
+      margin-top: 25px;
+      background-color: #e887b1;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 25px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 4px 12px rgba(232,135,177,0.6);
+      transition: background-color 0.3s ease;
+    }
+
+    #logoutBtn:hover {
+      background-color: #c46a8d;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Личный кабинет</h1>
+  <div class="container">
+    <h1>Личный кабинет</h1>
 
-  <!-- Кнопки переключения -->
-  <div>
-    <button id="showRegister">Зарегистрироваться</button>
-    <button id="showLogin">Войти</button>
-  </div>
+    <div class="toggle-buttons">
+      <button id="showRegister" class="active">Зарегистрироваться</button>
+      <button id="showLogin">Войти</button>
+    </div>
 
-  <!-- Форма регистрации -->
-  <form id="registerForm" class="form-section active">
-    <h2>Регистрация</h2>
+    <!-- Форма регистрации -->
+    <form id="registerForm" class="active">
+      <label for="reg-avatar">Аватар:</label>
+      <input type="file" id="reg-avatar" accept="image/*" required />
 
-    <label for="reg-avatar">Аватар:</label>
-    <input type="file" id="reg-avatar" accept="image/*" required />
+      <label for="reg-name">Имя:</label>
+      <input type="text" id="reg-name" required />
 
-    <label for="reg-name">Имя:</label>
-    <input type="text" id="reg-name" required />
+      <label for="reg-phone">Телефон:</label>
+      <input type="tel" id="reg-phone" required />
 
-    <label for="reg-phone">Телефон:</label>
-    <input type="tel" id="reg-phone" required />
+      <label for="reg-telegramId">Telegram ID:</label>
+      <input type="text" id="reg-telegramId" required />
 
-    <label for="reg-telegramId">Telegram ID:</label>
-    <input type="text" id="reg-telegramId" required />
+      <label for="reg-password">Пароль:</label>
+      <input type="password" id="reg-password" required />
 
-    <label for="reg-password">Пароль:</label>
-    <input type="password" id="reg-password" required />
+      <label for="reg-confirmPassword">Подтвердите пароль:</label>
+      <input type="password" id="reg-confirmPassword" required />
 
-    <label for="reg-confirmPassword">Подтвердите пароль:</label>
-    <input type="password" id="reg-confirmPassword" required />
+      <button type="submit">Зарегистрироваться</button>
+    </form>
 
-    <button type="submit">Зарегистрироваться</button>
-  </form>
+    <!-- Форма входа -->
+    <form id="loginForm">
+      <label for="login-phone">Телефон:</label>
+      <input type="tel" id="login-phone" required />
 
-  <!-- Форма входа -->
-  <form id="loginForm" class="form-section">
-    <h2>Вход</h2>
+      <label for="login-password">Пароль:</label>
+      <input type="password" id="login-password" required />
 
-    <label for="login-phone">Телефон:</label>
-    <input type="tel" id="login-phone" required />
+      <button type="submit">Войти</button>
+    </form>
 
-    <label for="login-password">Пароль:</label>
-    <input type="password" id="login-password" required />
-
-    <button type="submit">Войти</button>
-  </form>
-
-  <!-- Профиль (появится после успешного входа или регистрации) -->
-  <div id="userProfile" style="display:none;">
-    <h2>Добро пожаловать, <span id="userName"></span>!</h2>
-    <img id="userAvatar" src="" alt="Аватар" width="100" />
-    <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
-    <p><strong>Telegram ID:</strong> <span id="userTelegram"></span></p>
-    <button id="logoutBtn">Выйти</button>
+    <!-- Профиль -->
+    <div id="userProfile" style="display:none;">
+      <h2>Добро пожаловать, <span id="userName"></span>!</h2>
+      <img id="userAvatar" src="" alt="Аватар" />
+      <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
+      <p><strong>Telegram ID:</strong> <span id="userTelegram"></span></p>
+      <button id="logoutBtn">Выйти</button>
+    </div>
   </div>
 
 <script>
-  // Переключение между формами
   const registerForm = document.getElementById('registerForm');
   const loginForm = document.getElementById('loginForm');
   const showRegisterBtn = document.getElementById('showRegister');
   const showLoginBtn = document.getElementById('showLogin');
   const userProfile = document.getElementById('userProfile');
 
+  // Переключение кнопок с подсветкой
+  function setActiveButton(button) {
+    showRegisterBtn.classList.remove('active');
+    showLoginBtn.classList.remove('active');
+    button.classList.add('active');
+  }
+
   showRegisterBtn.onclick = () => {
     registerForm.classList.add('active');
     loginForm.classList.remove('active');
     userProfile.style.display = 'none';
+    setActiveButton(showRegisterBtn);
   };
   showLoginBtn.onclick = () => {
     loginForm.classList.add('active');
     registerForm.classList.remove('active');
     userProfile.style.display = 'none';
+    setActiveButton(showLoginBtn);
   };
 
   // Регистрация
@@ -144,27 +300,32 @@
     document.getElementById('userAvatar').src = user.avatar;
     document.getElementById('userPhone').textContent = user.phone;
     document.getElementById('userTelegram').textContent = user.telegramId;
+
+    // Активные кнопки сбросить
+    showRegisterBtn.classList.remove('active');
+    showLoginBtn.classList.remove('active');
   }
 
-  // Выход из профиля
+  // Выход
   document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('user');
     userProfile.style.display = 'none';
     showLoginBtn.click(); // Показать форму входа
   });
 
-  // При загрузке страницы проверяем, есть ли уже пользователь
+  // При загрузке страницы — если пользователь уже есть, показать профиль
   window.onload = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     if(user) {
       showUserProfile(user);
     } else {
-      showLoginBtn.click(); // Показываем форму входа по умолчанию
+      showLoginBtn.click();
     }
   };
 </script>
 
 </body>
 </html>
+
 
 
