@@ -2,59 +2,109 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Админ-панель</title>
   <style>
-    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;padding:20px}
-    .box{background:#fff;padding:20px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);max-width:500px;margin:auto}
-    select,input,textarea{width:100%;margin:8px 0;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
-    button{padding:10px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer}
-    button:hover{background:#b35588}
-    .back{margin-top:12px}
+    body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;background:#f9f0f7}
+    .container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;text-align:left;border-bottom:1px solid #eee}
+    th{background:#f0d6e3}
+    button{padding:6px 12px;margin:2px;border:none;border-radius:6px;cursor:pointer}
+    .praise{background:#7acb8f;color:#fff}
+    .warn{background:#e57d7d;color:#fff}
+    .msg-box{margin-top:20px}
+    textarea{width:100%;padding:10px;margin:10px 0;border-radius:6px;border:1px solid #ccc;resize:none}
+    .back{margin-top:20px;text-align:center}
     .back a{color:#999;text-decoration:none}
   </style>
 </head>
 <body>
-  <div class="box">
+  <div class="container">
     <h2>Админ-панель</h2>
-    <select id="sel"><option>Выберите...</option></select>
-    <select id="type"><option value="Похвала">Похвала</option><option value="Выговор">Выговор</option></select>
-    <textarea id="msg" rows="3" placeholder="Текст уведомления"></textarea>
-    <button onclick="send()">Отправить</button>
+    <p><strong>Выберите пользователя и отправьте сообщение:</strong></p>
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>Имя</th><th>Телефон</th><th>Рейтинг</th><th>Действия</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="msg-box" style="display:none" id="msgBox">
+      <h3 id="targetName">Сообщение для: </h3>
+      <textarea id="messageText" rows="3" placeholder="Введите сообщение..."></textarea>
+      <button id="sendBtn" class="praise">Отправить</button>
+    </div>
+
     <div class="back"><a href="profile.html">← Назад</a></div>
   </div>
-  <script>
-    const u=JSON.parse(localStorage.getItem('user'));
-    if(!u||u.role!=='admin'){location.href='login.html'}
 
-    const sel=document.getElementById('sel');
-    function upd(){
-      sel.innerHTML='<option>Выберите...</option>';
-      JSON.parse(localStorage.getItem('users')||'[]').forEach(us=>{
-        sel.innerHTML+=`<option value="${us.phone}">${us.name} (${us.phone})</option>`;
+  <script>
+    const admin = JSON.parse(localStorage.getItem('user'));
+    if (!admin || admin.role !== 'admin') location.href = 'login.html';
+
+    let selectedUser = null;
+    let selectedType = 'Похвала';
+
+    const tbody = document.querySelector('#userTable tbody');
+    const msgBox = document.getElementById('msgBox');
+    const sendBtn = document.getElementById('sendBtn');
+    const messageText = document.getElementById('messageText');
+    const targetName = document.getElementById('targetName');
+
+    function loadUsers() {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      tbody.innerHTML = '';
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${u.name}</td>
+          <td>${u.phone}</td>
+          <td>${u.rating ?? 0}</td>
+          <td>
+            <button class="praise" onclick="startMessage('${u.phone}','Похвала')">Похвала</button>
+            <button class="warn" onclick="startMessage('${u.phone}','Выговор')">Выговор</button>
+          </td>`;
+        tbody.appendChild(tr);
       });
     }
-    upd();
 
-    function send(){
-      const ph=sel.value;
-      const tp=document.getElementById('type').value;
-      const txt=document.getElementById('msg').value.trim();
-      if(ph==='Выберите...'||!txt){alert('Заполните!');return;}
-      const uss=JSON.parse(localStorage.getItem('users')||'[]');
-      const idx=uss.findIndex(x=>x.phone===ph);
-      const item=uss[idx];
-      const delta = tp==='Похвала'?1:-1;
-      item.rating = (item.rating||0) + delta;
-      item.notifications = item.notifications||[];
-      item.notifications.push(`${tp}: ${txt}`);
-      uss[idx]=item;
-      localStorage.setItem('users',JSON.stringify(uss));
-      alert('Отправлено');
-    }
+    window.startMessage = function(phone, type) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      selectedUser = users.find(u => u.phone === phone);
+      if (!selectedUser) return alert('Ошибка: пользователь не найден');
+
+      selectedType = type;
+      targetName.textContent = `${type} для: ${selectedUser.name}`;
+      sendBtn.textContent = `Отправить (${type})`;
+      sendBtn.className = type === 'Похвала' ? 'praise' : 'warn';
+      messageText.value = '';
+      msgBox.style.display = 'block';
+    };
+
+    sendBtn.onclick = () => {
+      const msg = messageText.value.trim();
+      if (!msg) return alert('Введите сообщение!');
+      const all = JSON.parse(localStorage.getItem('users') || '[]');
+      const i = all.findIndex(u => u.phone === selectedUser.phone);
+      if (i === -1) return alert('Пользователь не найден');
+
+      all[i].notifications = all[i].notifications || [];
+      all[i].notifications.push(`${selectedType}: ${msg}`);
+      all[i].rating = (all[i].rating ?? 0) + (selectedType === 'Похвала' ? 1 : -1);
+      localStorage.setItem('users', JSON.stringify(all));
+      msgBox.style.display = 'none';
+      loadUsers();
+      alert('Сообщение отправлено!');
+    };
+
+    loadUsers();
   </script>
 </body>
 </html>
+
 
 
 
