@@ -28,24 +28,39 @@
     </div>
     <div class="back"><a href="profile.html">← Назад</a></div>
   </div>
-  <script>
-    const user=JSON.parse(localStorage.getItem('user'));
-    if(!user||user.role!=='user'){location.href='profile.html'}
-    document.getElementById('nm').textContent=user.name;
-    document.getElementById('rt').textContent=user.rating;
-    function showNot(){
-      const users=JSON.parse(localStorage.getItem('users')||'[]');
-      const usr=users.find(u=>u.phone===user.phone);
-      const lst=document.getElementById('lst');
-      lst.innerHTML='';
-      (usr.notifications||[]).forEach(n=>{const li=document.createElement('li');li.textContent=n;lst.append(li)});
-      document.getElementById('notes').style.display='block';
-    }
-    function lg(){
-      localStorage.removeItem('user');
-      location.href='profile.html';
-    }
-  </script>
+ <script>
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || user.role !== 'user') {
+    location.href = 'profile.html';
+  }
+
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const actualUser = users.find(u => u.phone === user.phone);
+  if (!actualUser) {
+    alert('Пользователь не найден');
+    localStorage.removeItem('user');
+    location.href = 'profile.html';
+  }
+
+  document.getElementById('nm').textContent = actualUser.name;
+  document.getElementById('rt').textContent = actualUser.rating;
+
+  function showNot() {
+    const lst = document.getElementById('lst');
+    lst.innerHTML = '';
+    (actualUser.notifications || []).forEach(note => {
+      const li = document.createElement('li');
+      li.textContent = note;
+      lst.appendChild(li);
+    });
+    document.getElementById('notes').style.display = 'block';
+  }
+
+  function lg() {
+    localStorage.removeItem('user');
+    location.href = 'profile.html';
+  }
+</script>
 </body>
 </html>
 
