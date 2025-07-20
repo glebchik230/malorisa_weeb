@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Регистрация и вход</title>
+</head>
+<body>
+
+  <div class="auth-container">
+
+    <!-- Форма регистрации -->
+    <form id="register-form">
+      <h2>Регистрация</h2>
+
+      <label for="avatar">Аватар:</label>
+      <input type="file" id="avatar" accept="image/*" required />
+
+      <label for="name">Имя:</label>
+      <input type="text" id="name" required />
+
+      <label for="phone">Телефон:</label>
+      <input type="tel" id="phone" required />
+
+      <label for="telegramId">Telegram ID:</label>
+      <input type="text" id="telegramId" required />
+
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" required />
+
+      <label for="confirmPassword">Подтвердите пароль:</label>
+      <input type="password" id="confirmPassword" required />
+
+      <button type="submit">Зарегистрироваться</button>
+      <button type="button" id="loginToggle">Войти</button>
+    </form>
+
+    <!-- Форма входа -->
+    <form id="login-form" style="display:none;">
+      <h2>Вход</h2>
+
+      <label for="login-phone">Телефон:</label>
+      <input type="tel" id="login-phone" required />
+
+      <label for="login-password">Пароль:</label>
+      <input type="password" id="login-password" required />
+
+      <button type="submit">Войти</button>
+      <button type="button" id="registerToggle">Регистрация</button>
+    </form>
+
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
 
