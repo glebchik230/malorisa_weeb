@@ -1,13 +1,118 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head><meta charset="UTF-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Личный кабинет</title></head>
-<body style="font-family:'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f9f0f7">
-  <div style="background:#fff;padding:30px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);text-align:center;max-width:360px;width:100%">
-    <h2>Личный кабинет</h2>
-    <button onclick="location.href='login.html'" style="width:100%;padding:12px;margin:10px 0;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer">Войти</button>
-    <button onclick="location.href='register.html'" style="width:100%;padding:12px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer">Зарегистрироваться</button>
-    <div style="margin-top:12px"><a href="index.html" style="color:#999;text-decoration:none">← Назад</a></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Личный кабинет</title>
+  <script src="https://cdn.backendless.com/js/6.8.1/backendless.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f0f7;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      display: inline-block;
+      width: 90%;
+      max-width: 400px;
+    }
+    button {
+      background-color: #f08ca4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e76c8c;
+    }
+    #notifications {
+      margin-top: 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Личный профиль</h2>
+    <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
+    <p><strong>Рейтинг:</strong> <span id="userRating">0</span></p>
+    <button onclick="logout()">Выйти</button>
+    <button onclick="goBack()">Назад</button>
+    <button onclick="loadNotifications()">Уведомления</button>
+
+    <div id="notifications"></div>
   </div>
+
+  <script>
+    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
+    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
+    const ADMIN_PHONE = '9004163928';
+    const ADMIN_PASSWORD = '123';
+
+    Backendless.initApp(APP_ID, API_KEY);
+
+    Backendless.UserService.getCurrentUser()
+      .then(user => {
+        if (!user) {
+          window.location.href = "profile.html";
+          return;
+        }
+
+        // Проверка на админа
+        if (user.phone === ADMIN_PHONE) {
+          Backendless.UserService.login(user.email, ADMIN_PASSWORD, true)
+            .then(() => {
+              window.location.href = "admin.html";
+            })
+            .catch(() => {
+              // остаться в личном профиле
+              document.getElementById("userPhone").textContent = user.phone;
+              document.getElementById("userRating").textContent = user.rating || 0;
+            });
+        } else {
+          document.getElementById("userPhone").textContent = user.phone;
+          document.getElementById("userRating").textContent = user.rating || 0;
+        }
+      });
+
+    function logout() {
+      Backendless.UserService.logout()
+        .then(() => window.location.href = "profile.html")
+        .catch(error => alert("Ошибка: " + error.message));
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+
+    function loadNotifications() {
+      Backendless.UserService.getCurrentUser().then(user => {
+        const phone = user.phone;
+        const query = Backendless.DataQueryBuilder.create().setWhereClause(`recipientPhone = '${phone}'`);
+        Backendless.Data.of("Notifications").find(query).then(notifications => {
+          const container = document.getElementById("notifications");
+          container.innerHTML = "<h3>Уведомления:</h3>";
+          if (notifications.length === 0) {
+            container.innerHTML += "<p>Нет уведомлений</p>";
+          } else {
+            notifications.forEach(n => {
+              const color = n.type === 'похвала' ? 'green' : (n.type === 'выговор' ? 'red' : 'black');
+              container.innerHTML += `<p style="color: ${color}">[${n.type}] ${n.message}</p>`;
+            });
+          }
+        });
+      });
+    }
+  </script>
 </body>
 </html>
 
