@@ -1,85 +1,49 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Личный кабинет</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Кабинет</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f0f7;
-      padding: 30px;
-      text-align: center;
-    }
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 400px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #cc6699;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #notifications {
-      text-align: left;
-      margin-top: 20px;
-    }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;display:flex;align-items:center;justify-content:center;height:100vh}
+    .box{background:#fff;padding:30px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);width:100%;max-width:360px;text-align:center}
+    img{width:80px;height:80px;border-radius:50%;margin-bottom:15px}
+    button{width:calc(100% - 20px);margin:8px;padding:10px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer}
+    button:hover{background:#b35588}
+    ul{text-align:left;margin:12px;max-height:120px;overflow:auto;padding:0;list-style:none}
+    li{padding:6px;border-bottom:1px solid #eee}
+    .back{margin-top:12px;font-size:14px}
+    .back a{color:#999;text-decoration:none}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Личный кабинет</h1>
-    <p id="user-info"></p>
-    <button onclick="showNotifications()">Уведомления</button>
-    <button onclick="logout()">Выйти</button>
-
-    <div id="notifications" style="display:none;">
-      <h3>Уведомления:</h3>
-      <ul id="noti-list"></ul>
+  <div class="box">
+    <h2>Личный кабинет</h2>
+    <p><strong>Имя:</strong> <span id="nm"></span></p>
+    <p><strong>Рейтинг:</strong> <span id="rt">0</span></p>
+    <button onclick="showNot()">Уведомления</button>
+    <button onclick="lg()">Выйти</button>
+    <div id="notes" style="display:none">
+      <h3>Уведомления:</h3><ul id="lst"></ul>
     </div>
+    <div class="back"><a href="profile.html">← Назад</a></div>
   </div>
-
   <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || user.role === "admin") {
-      window.location.href = "login.html";
+    const user=JSON.parse(localStorage.getItem('user'));
+    if(!user||user.role!=='user'){location.href='profile.html'}
+    document.getElementById('nm').textContent=user.name;
+    document.getElementById('rt').textContent=user.rating;
+    function showNot(){
+      const users=JSON.parse(localStorage.getItem('users')||'[]');
+      const usr=users.find(u=>u.phone===user.phone);
+      const lst=document.getElementById('lst');
+      lst.innerHTML='';
+      (usr.notifications||[]).forEach(n=>{const li=document.createElement('li');li.textContent=n;lst.append(li)});
+      document.getElementById('notes').style.display='block';
     }
-
-    document.getElementById("user-info").textContent = `Имя: ${user.name}, Тел: ${user.phone}, Рейтинг: ${user.rating || 0}`;
-
-    function showNotifications() {
-      const list = document.getElementById("noti-list");
-      list.innerHTML = "";
-
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const current = users.find(u => u.phone === user.phone);
-      const notes = (current && current.notifications) || [];
-
-      if (notes.length === 0) {
-        list.innerHTML = "<li>Нет уведомлений</li>";
-      } else {
-        notes.forEach(n => {
-          const li = document.createElement("li");
-          li.textContent = n;
-          list.appendChild(li);
-        });
-      }
-
-      document.getElementById("notifications").style.display = "block";
-    }
-
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = "login.html";
+    function lg(){
+      localStorage.removeItem('user');
+      location.href='profile.html';
     }
   </script>
 </body>
