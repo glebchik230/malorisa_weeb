@@ -1,72 +1,75 @@
-// Эта часть отвечает за сохранение данных пользователя
-let userData = {
-  name: '',
-  phone: '',
-  telegramId: '',
-  avatar: '',
-  rating: '0.0 ⭐' // начальный рейтинг сотрудника
-};
+// profile.js
 
-// Получаем элементы формы и просмотра
-const profileForm = document.getElementById('profile-form');
-const profileFormSection = document.getElementById('profile-form-section');
-const profileViewSection = document.getElementById('profile-view-section');
-
-// Прикрепляем обработчик отправки формы
-profileForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  // Считываем данные из формы
-  userData.name = document.getElementById('name').value;
-  userData.phone = document.getElementById('phone').value;
-  userData.telegramId = document.getElementById('telegramId').value;
-
-  // Работа с аватаркой
-  const avatarInput = document.getElementById('avatar');
-  const file = avatarInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      userData.avatar = reader.result;
-      showProfileView(); // Показать личный кабинет после загрузки аватарки
-    };
-    reader.readAsDataURL(file);
-  } else {
-    userData.avatar = ''; // если аватарка не загружена
-    showProfileView();
-  }
-});
-
-// Эта функция показывает личный кабинет с данными
-function showProfileView() {
-  document.getElementById('profile-name').textContent = userData.name;
-  document.getElementById('profile-phone').textContent = userData.phone;
-  document.getElementById('profile-telegramId').textContent = userData.telegramId;
-  document.getElementById('profile-rating').textContent = userData.rating;
-
-  // Устанавливаем аватар (если есть)
-  const avatarPreview = document.getElementById('profile-avatar');
-  if (userData.avatar) {
-    avatarPreview.src = userData.avatar;
-  } else {
-    avatarPreview.src = 'default-avatar.png'; // путь к изображению по умолчанию
-  }
-
-  // Переключение секций
-  profileFormSection.style.display = 'none';
-  profileViewSection.style.display = 'block';
+// Показ сообщения пользователю
+function showMessage(text, isError = false) {
+  const msg = document.getElementById("message");
+  msg.textContent = text;
+  msg.style.color = isError ? "red" : "green";
 }
 
-// Кнопка "Редактировать профиль"
-const editBtn = document.getElementById('edit-profile-btn');
-editBtn.addEventListener('click', () => {
-  profileFormSection.style.display = 'block';
-  profileViewSection.style.display = 'none';
-});
+// Регистрация нового пользователя
+function register() {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const avatarInput = document.getElementById("avatar");
 
-// Кнопка "На главный экран"
-const homeBtn = document.getElementById('btn-home');
-homeBtn.addEventListener('click', () => {
-  window.location.href = 'index.html'; // переадресация на главную страницу
-});
+  if (!name || !phone || !password || !confirmPassword) {
+    showMessage("Заполните все поля", true);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showMessage("Пароли не совпадают", true);
+    return;
+  }
+
+  const reader = new FileReader();
+  if (avatarInput.files.length > 0) {
+    reader.onload = function (e) {
+      saveUser(name, phone, password, e.target.result);
+    };
+    reader.readAsDataURL(avatarInput.files[0]);
+  } else {
+    saveUser(name, phone, password, null);
+  }
+}
+
+// Сохраняем пользователя в localStorage
+function saveUser(name, phone, password, avatar) {
+  const userData = {
+    name,
+    phone,
+    password,
+    avatar,
+    rating: 5, // Стартовый рейтинг
+  };
+
+  localStorage.setItem("user", JSON.stringify(userData));
+  showMessage("Регистрация успешна");
+  setTimeout(() => {
+    window.location.href = "cabinet.html";
+  }, 1000);
+}
+
+// Вход по данным
+function login() {
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value;
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  if (
+    storedUser &&
+    storedUser.phone === phone &&
+    storedUser.password === password
+  ) {
+    showMessage("Вход успешен");
+    setTimeout(() => {
+      window.location.href = "cabinet.html";
+    }, 1000);
+  } else {
+    showMessage("Неверный номер или пароль", true);
+  }
+}
 
