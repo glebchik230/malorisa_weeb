@@ -2,119 +2,144 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Админ-панель</title>
-  <script src="https://unpkg.com/backendless"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backendless/7.0.5/backendless.min.js"></script>
   <style>
     body {
-      font-family: sans-serif;
-      background-color: #f9f0f7;
-      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff0f5;
+      color: #333;
       padding: 20px;
     }
-
-    h1 {
-      color: #cc6699;
+    h2 {
+      color: #a03e84;
     }
-
     .user-list {
-      margin: 20px 0;
       max-height: 300px;
       overflow-y: auto;
-      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
       padding: 10px;
-      border-radius: 10px;
+      margin-bottom: 20px;
     }
-
     .user-item {
-      display: flex;
-      justify-content: space-between;
       padding: 8px;
       border-bottom: 1px solid #eee;
-    }
-
-    .user-item button {
-      margin-left: 10px;
-    }
-
-    .back-button, .logout-button {
-      background-color: #cc6699;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      margin-top: 10px;
-      margin-right: 10px;
       cursor: pointer;
     }
-
-    .back-button:hover, .logout-button:hover {
-      background-color: #b35588;
+    .user-item:hover {
+      background-color: #ffe6f0;
+    }
+    .form-section {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 10px 0 0;
+      border: none;
+      border-radius: 8px;
+      background-color: #d96da1;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c35591;
+    }
+    select, textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
-  <h1>Админ-панель</h1>
-  <div>
-    <button class="back-button" onclick="goBack()">← Назад</button>
-    <button class="logout-button" onclick="logout()">Выйти</button>
+  <h2>Админ-панель</h2>
+
+  <div class="user-list" id="user-list">Загрузка пользователей...</div>
+
+  <div class="form-section">
+    <label>Выбранный пользователь: <strong id="selected-user">никто</strong></label>
+    <textarea id="message-text" placeholder="Введите сообщение..."></textarea>
+    <select id="message-type">
+      <option value="похвала">Похвала</option>
+      <option value="выговор">Выговор</option>
+    </select>
+    <button onclick="sendMessage()">Отправить сообщение</button>
   </div>
-  <h3>Список сотрудников:</h3>
-  <div class="user-list" id="user-list">Загрузка...</div>
+
+  <button onclick="goBack()">Назад</button>
+  <button onclick="logout()">Выйти</button>
 
   <script>
     const APP_ID = "DCA33B47-8058-4798-8EFA-40BE7FDE1DB3";
     const API_KEY = "433B51A9-0249-48FE-96EF-C94A139DD378";
-
     Backendless.initApp(APP_ID, API_KEY);
 
-    async function getUsers() {
+    let selectedUser = null;
+
+    async function loadUsers() {
       try {
         const users = await Backendless.Data.of("Users").find();
-        const list = document.getElementById("user-list");
-        list.innerHTML = "";
+        const userList = document.getElementById("user-list");
+        userList.innerHTML = "";
 
         users.forEach(user => {
-          if (user.phone !== "9004163928") {
-            const div = document.createElement("div");
-            div.className = "user-item";
-            div.innerHTML = `
-              <span>${user.phone || "Без номера"}</span>
-              <div>
-                <button onclick="sendMessage('${user.objectId}', 'Похвала', 'praise')">Похвала</button>
-                <button onclick="sendMessage('${user.objectId}', 'Выговор', 'warning')">Выговор</button>
-              </div>
-            `;
-            list.appendChild(div);
-          }
+          const div = document.createElement("div");
+          div.className = "user-item";
+          div.textContent = user.phone || user.email;
+          div.onclick = () => {
+            selectedUser = user;
+            document.getElementById("selected-user").innerText = user.phone || user.email;
+          };
+          userList.appendChild(div);
         });
 
         if (users.length === 0) {
-          list.innerHTML = "Нет пользователей.";
+          userList.innerHTML = "Нет пользователей.";
         }
       } catch (e) {
         document.getElementById("user-list").innerText = "Ошибка загрузки пользователей: " + e.message;
       }
     }
 
-    async function sendMessage(toId, text, type) {
+    async function sendMessage() {
+      if (!selectedUser) return alert("Выберите пользователя.");
+
+      const text = document.getElementById("message-text").value.trim();
+      const type = document.getElementById("message-type").value;
+
+      if (!text) return alert("Введите текст сообщения.");
+
+      const record = {
+        userId: selectedUser.objectId,
+        phone: selectedUser.phone || selectedUser.email,
+        text,
+        type,
+        timestamp: new Date()
+      };
+
       try {
-        await Backendless.Data.of("Messages").save({
-          toId,
-          text,
-          type,
-          created: new Date()
-        });
+        await Backendless.Data.of("Messages").save(record);
 
-        // Обновить рейтинг
-        const user = await Backendless.Data.of("Users").findById(toId);
-        let delta = type === "praise" ? 1 : -1;
-        user.rating = (user.rating || 0) + delta;
-        await Backendless.Data.of("Users").save(user);
+        // Обновляем рейтинг
+        const currentRating = selectedUser.rating || 0;
+        selectedUser.rating = type === "похвала" ? currentRating + 1 : currentRating - 1;
+        await Backendless.Data.of("Users").save(selectedUser);
 
-        alert("Сообщение отправлено");
+        alert("Сообщение отправлено!");
+        document.getElementById("message-text").value = "";
       } catch (e) {
-        alert("Ошибка: " + e.message);
+        alert("Ошибка отправки: " + e.message);
       }
     }
 
@@ -122,13 +147,14 @@
       window.location.href = "index.html";
     }
 
-    async function logout() {
-      await Backendless.UserService.logout();
-      localStorage.removeItem("user");
-      window.location.href = "profile.html";
+    function logout() {
+      Backendless.UserService.logout().then(() => {
+        localStorage.removeItem("user");
+        window.location.href = "profile.html";
+      });
     }
 
-    getUsers();
+    loadUsers();
   </script>
 </body>
 </html>
