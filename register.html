@@ -1,89 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Регистрация</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #ffeef4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 40px;
-    }
-    h2 {
-      color: #d63384;
-    }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    input, button {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      background-color: #ff69b4;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #e056ab;
-    }
-    .nav-buttons {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-    }
-    .nav-buttons a {
-      text-decoration: none;
-      background: #ddd;
-      padding: 10px;
-      border-radius: 8px;
-      color: #333;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Регистрация — Малориса</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f0f7;
+    margin: 0; padding: 20px;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+  }
+  .container {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 350px;
+  }
+  h2 {
+    color: #cc6699;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  input[type="text"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    background-color: #cc6699;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #b35588;
+  }
+  .link {
+    margin-top: 15px;
+    text-align: center;
+  }
+  .link a {
+    color: #cc6699;
+    text-decoration: none;
+  }
+  .link a:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
+
+<div class="container">
   <h2>Регистрация</h2>
   <form id="register-form">
-    <input type="text" id="username" placeholder="Имя" required />
-    <input type="tel" id="phone" placeholder="Номер телефона" required />
-    <input type="password" id="password" placeholder="Пароль" required />
+    <label for="avatar">Аватар</label>
+    <input type="file" id="avatar" accept="image/*" required />
+
+    <label for="name">Имя</label>
+    <input type="text" id="name" required />
+
+    <label for="phone">Телефон</label>
+    <input type="tel" id="phone" required pattern="\d{10,15}" title="Только цифры, 10-15 символов" />
+
+    <label for="password">Пароль</label>
+    <input type="password" id="password" required minlength="6" />
+
+    <label for="confirm-password">Подтвердите пароль</label>
+    <input type="password" id="confirm-password" required minlength="6" />
+
     <button type="submit">Зарегистрироваться</button>
   </form>
-
-  <div class="nav-buttons">
-    <a href="index.html">На главную</a>
-    <a href="login.html">Войти</a>
+  <div class="link">
+    Уже есть аккаунт? <a href="login.html">Войти</a>
   </div>
+</div>
 
-  <!-- Supabase SDK + config -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="config.js"></script>
-  <script>
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="config.js"></script>
+<script>
+  const form = document.getElementById('register-form');
 
-      const username = document.getElementById('username').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value.trim();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      if (!username || !phone || !password) return alert('Заполните все поля');
+    // Получаем значения
+    const avatarInput = document.getElementById('avatar');
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        phone: '+7' + phone.replace(/\D/g, ''), // форматируем телефон
-        password
+    if (password !== confirmPassword) {
+      alert('Пароли не совпадают!');
+      return;
+    }
+
+    if (avatarInput.files.length === 0) {
+      alert('Пожалуйста, загрузите аватар.');
+      return;
+    }
+
+    // Создаём email из телефона (чтобы Supabase мог работать)
+    const email = phone + '@malorisa.local';
+
+    try {
+      // Регистрируем пользователя в Supabase Auth
+      const { user, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
       });
 
       if (signUpError) {
@@ -91,26 +134,51 @@
         return;
       }
 
-      const userId = signUpData.user.id;
+      // Загружаем аватар в Supabase Storage
+      const file = avatarInput.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
 
-      // Добавляем профиль
-      await supabase.from('profiles').insert({
-        id: userId,
-        username,
-        phone,
-        rating: 0
-      });
+      let { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
 
-      // Добавляем уведомление админу
-      await supabase.from('notifications').insert({
-        message: `Новый пользователь: ${username} (${phone})`,
-        type: 'регистрация'
-      });
+      if (uploadError) {
+        alert('Ошибка загрузки аватара: ' + uploadError.message);
+        return;
+      }
 
-      alert('Регистрация успешна!');
-      window.location.href = 'cabinet.html';
-    });
-  </script>
+      // Получаем публичный URL аватара
+      const { data: avatarUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      // Добавляем профиль в таблицу profiles
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([{
+          id: user.id,
+          name,
+          phone,
+          avatar_url: avatarUrlData.publicUrl,
+          rating: 0
+        }]);
+
+      if (profileError) {
+        alert('Ошибка создания профиля: ' + profileError.message);
+        return;
+      }
+
+      alert('Регистрация прошла успешно! Пожалуйста, войдите.');
+      window.location.href = 'login.html';
+
+    } catch (error) {
+      alert('Ошибка: ' + error.message);
+    }
+  });
+</script>
+
 </body>
 </html>
 
