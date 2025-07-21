@@ -4,52 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Регистрация</title>
-  <script src="https://cdn.backendless.com/sdk/js/latest/backendless.min.js"></script>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f0f7;
-      color: #333;
+      font-family: sans-serif;
+      background-color: #ffeef4;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding-top: 40px;
     }
-    h2 { margin-bottom: 20px; }
+    h2 {
+      color: #d63384;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
     input, button {
       padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      max-width: 300px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      font-size: 16px;
     }
     button {
-      background-color: #ffb6c1;
+      background-color: #ff69b4;
+      color: white;
       border: none;
       cursor: pointer;
     }
+    button:hover {
+      background-color: #e056ab;
+    }
     .nav-buttons {
       margin-top: 20px;
+      display: flex;
+      gap: 10px;
     }
     .nav-buttons a {
-      display: inline-block;
-      margin: 5px;
-      color: #fff;
-      background-color: #999;
-      padding: 8px 16px;
-      border-radius: 6px;
       text-decoration: none;
+      background: #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <h2>Регистрация</h2>
-  <form id="registerForm">
-    <input type="text" id="phone" placeholder="Номер телефона" required><br>
-    <input type="password" id="password" placeholder="Пароль" required><br>
-    <input type="password" id="confirm" placeholder="Подтвердите пароль" required><br>
+  <form id="register-form">
+    <input type="text" id="username" placeholder="Имя" required />
+    <input type="tel" id="phone" placeholder="Номер телефона" required />
+    <input type="password" id="password" placeholder="Пароль" required />
     <button type="submit">Зарегистрироваться</button>
   </form>
 
@@ -58,55 +68,50 @@
     <a href="login.html">Войти</a>
   </div>
 
+  <!-- Supabase SDK + config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="config.js"></script>
   <script>
-    const APP_ID = 'DCA33B47-8058-4798-8EFA-40BE7FDE1DB3';
-    const API_KEY = '433B51A9-0249-48FE-96EF-C94A139DD378';
-    Backendless.initApp(APP_ID, API_KEY);
-
-    const ADMIN_PHONE = '9004163928';
-
-    document.getElementById("registerForm").addEventListener("submit", async function (e) {
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
-      const confirm = document.getElementById("confirm").value;
+      const username = document.getElementById('username').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value.trim();
 
-      if (password !== confirm) {
-        alert("Пароли не совпадают!");
+      if (!username || !phone || !password) return alert('Заполните все поля');
+
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        phone: '+7' + phone.replace(/\D/g, ''), // форматируем телефон
+        password
+      });
+
+      if (signUpError) {
+        alert('Ошибка регистрации: ' + signUpError.message);
         return;
       }
 
-      const user = new Backendless.User();
-      user.phone = phone;
-      user.password = password;
-      user.email = phone + "@example.com"; // нужен для Backendless
-      user.rating = 0;
+      const userId = signUpData.user.id;
 
-      try {
-        await Backendless.UserService.register(user);
-        
-        // Отправка уведомления админу (в таблицу "notifications")
-        const notification = {
-          type: "регистрация",
-          message: `Новый пользователь с номером ${phone}`,
-          createdAt: new Date()
-        };
-        await Backendless.Data.of("notifications").save(notification);
+      // Добавляем профиль
+      await supabase.from('profiles').insert({
+        id: userId,
+        username,
+        phone,
+        rating: 0
+      });
 
-        alert("Регистрация успешна!");
-        window.location.href = "profile.html";
-      } catch (error) {
-        alert("Ошибка регистрации: " + error.message);
-      }
+      // Добавляем уведомление админу
+      await supabase.from('notifications').insert({
+        message: `Новый пользователь: ${username} (${phone})`,
+        type: 'регистрация'
+      });
+
+      alert('Регистрация успешна!');
+      window.location.href = 'cabinet.html';
     });
   </script>
-  <!-- Подключение библиотеки Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-
-<!-- Подключение конфигурации (обязательно после supabase.min.js!) -->
-<script src="config.js"></script>
-
 </body>
 </html>
+
 
