@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Малориса — Обучающее приложение</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://api.backendless.com/sdk/js/latest/backendless.min.js"></script>
+  <!-- Подключаем Supabase и config.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="config.js"></script>
 </head>
 <body>
   <!-- Бургер-кнопка -->
@@ -45,40 +47,32 @@
   </main>
 
   <script>
-    // Инициализация Backendless
-    Backendless.initApp("DCA33B47-8058-4798-8EFA-40BE7FDE1DB3", "433B51A9-0249-48FE-96EF-C94A139DD378");
-
     function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("active");
     }
 
-    function goToCabinet() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsed = JSON.parse(user);
-        if (parsed.phone === '9004163928') {
-          window.location.href = "admin.html";
-        } else {
-          window.location.href = "cabinet.html";
-        }
-      } else {
+    async function goToCabinet() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
         window.location.href = "profile.html";
+        return;
       }
-    }
 
-    // Примерная функция регистрации (используется в profile.html)
-    async function registerUser(phone, password) {
-      const user = new Backendless.User();
-      user.email = phone + "@example.com";
-      user.password = password;
-      user.phone = phone;
-      user.rating = 0;
+      const { data, error: profileError } = await supabase
+        .from('profiles')
+        .select('phone')
+        .eq('id', user.id)
+        .single();
 
-      try {
-        await Backendless.UserService.register(user);
-        alert("Регистрация успешна");
-      } catch (error) {
-        alert("Ошибка: " + error.message);
+      if (profileError || !data) {
+        window.location.href = "profile.html";
+        return;
+      }
+
+      if (data.phone === '9004163928') {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "cabinet.html";
       }
     }
   </script>
