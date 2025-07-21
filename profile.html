@@ -1,196 +1,111 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Личный кабинет</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/backendless/7.0.5/backendless.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f0f7;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    h2 {
-      color: #b3478f;
-    }
-    button, input {
-      margin: 10px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    input {
-      width: 250px;
-    }
-    .hidden {
-      display: none;
-    }
-    .profile-box {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-top: 20px;
-      text-align: center;
-    }
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Личный кабинет — Малориса</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f0f7;
+    margin: 0; padding: 20px;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+  }
+  .container {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+  }
+  img.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  h2 {
+    color: #cc6699;
+    margin-bottom: 10px;
+  }
+  p {
+    margin: 5px 0;
+  }
+  button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    background-color: #cc6699;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #b35588;
+  }
+</style>
 </head>
 <body>
-  <h2>Личный кабинет</h2>
-  
-  <!-- Кнопки при первом заходе -->
-  <div id="choice-box" class="btn-group">
-    <button onclick="showRegister()">Зарегистрироваться</button>
-    <button onclick="showLogin()">Войти</button>
-    <button onclick="goHome()">На главную</button>
-  </div>
 
-  <!-- Регистрация -->
-  <div id="register-box" class="profile-box hidden">
-    <h3>Регистрация</h3>
-    <input type="text" id="reg-phone" placeholder="Телефон"><br>
-    <input type="password" id="reg-pass" placeholder="Пароль"><br>
-    <input type="password" id="reg-confirm" placeholder="Подтвердите пароль"><br>
-    <button onclick="register()">Зарегистрироваться</button>
-    <button onclick="goBack()">Назад</button>
-  </div>
+<div class="container" id="profile-container">
+  <img class="avatar" src="" alt="Аватар" id="avatar-img" />
+  <h2 id="name"></h2>
+  <p>Телефон: <span id="phone"></span></p>
+  <p>Рейтинг: <span id="rating">0</span></p>
 
-  <!-- Вход -->
-  <div id="login-box" class="profile-box hidden">
-    <h3>Вход</h3>
-    <input type="text" id="login-phone" placeholder="Телефон"><br>
-    <input type="password" id="login-pass" placeholder="Пароль"><br>
-    <button onclick="login()">Войти</button>
-    <button onclick="goBack()">Назад</button>
-  </div>
+  <button id="logout-btn">Выйти</button>
+</div>
 
-  <!-- Профиль -->
-  <div id="profile-box" class="profile-box hidden">
-    <h3 id="welcome-title">Добро пожаловать!</h3>
-    <p><strong>Телефон:</strong> <span id="user-phone"></span></p>
-    <p><strong>Рейтинг:</strong> <span id="user-rating">0</span></p>
-    <button onclick="logout()">Выйти</button><br><br>
-    <button onclick="goHome()">Назад</button>
-  </div>
-
-  <script>
-    const APP_ID = "DCA33B47-8058-4798-8EFA-40BE7FDE1DB3";
-    const API_KEY = "433B51A9-0249-48FE-96EF-C94A139DD378";
-    Backendless.initApp(APP_ID, API_KEY);
-
-    const ADMIN_PHONE = "9004163928";
-    const ADMIN_PASS = "123";
-
-    function showRegister() {
-      document.getElementById("choice-box").classList.add("hidden");
-      document.getElementById("register-box").classList.remove("hidden");
-    }
-
-    function showLogin() {
-      document.getElementById("choice-box").classList.add("hidden");
-      document.getElementById("login-box").classList.remove("hidden");
-    }
-
-    function goBack() {
-      document.querySelectorAll(".profile-box").forEach(el => el.classList.add("hidden"));
-      document.getElementById("choice-box").classList.remove("hidden");
-    }
-
-    function goHome() {
-      window.location.href = "index.html";
-    }
-
-    async function register() {
-      const phone = document.getElementById("reg-phone").value.trim();
-      const pass = document.getElementById("reg-pass").value;
-      const confirm = document.getElementById("reg-confirm").value;
-
-      if (!phone || !pass || !confirm) return alert("Заполните все поля.");
-      if (pass !== confirm) return alert("Пароли не совпадают.");
-
-      const user = new Backendless.User();
-      user.email = phone + "@app.com";
-      user.password = pass;
-      user.phone = phone;
-      user.rating = 0;
-
-      try {
-        await Backendless.UserService.register(user);
-        alert("Успешно зарегистрированы!");
-        await Backendless.Messaging.publish("admin_notifications", `Новый пользователь: ${phone}`);
-        loginAfter(phone, pass);
-      } catch (e) {
-        alert("Ошибка регистрации: " + e.message);
-      }
-    }
-
-    async function login() {
-      const phone = document.getElementById("login-phone").value.trim();
-      const pass = document.getElementById("login-pass").value;
-      loginAfter(phone, pass);
-    }
-
-    async function loginAfter(phone, pass) {
-      try {
-        const user = await Backendless.UserService.login(phone + "@app.com", pass, true);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        if (phone === ADMIN_PHONE && pass === ADMIN_PASS) {
-          window.location.href = "admin.html";
-        } else {
-          showProfile(user);
-        }
-      } catch (e) {
-        alert("Ошибка входа: " + e.message);
-      }
-    }
-
-    function showProfile(user) {
-      document.querySelectorAll(".profile-box").forEach(el => el.classList.add("hidden"));
-      document.getElementById("profile-box").classList.remove("hidden");
-      document.getElementById("user-phone").innerText = user.phone;
-      document.getElementById("user-rating").innerText = user.rating || 0;
-    }
-
-    function logout() {
-      Backendless.UserService.logout().then(() => {
-        localStorage.removeItem("user");
-        location.reload();
-      });
-    }
-
-    // Автологин при перезагрузке
-    window.addEventListener("load", async () => {
-      const user = await Backendless.UserService.getCurrentUser();
-      if (user) {
-        if (user.phone === ADMIN_PHONE && user.password === ADMIN_PASS) {
-          window.location.href = "admin.html";
-        } else {
-          showProfile(user);
-        }
-      }
-    });
-  </script>
-  <!-- Подключение библиотеки Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-
-<!-- Подключение конфигурации (обязательно после supabase.min.js!) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script src="config.js"></script>
+<script>
+  async function loadProfile() {
+    const user = supabase.auth.getUser();
+    const session = await supabase.auth.getSession();
+
+    if (!session.data.session) {
+      alert('Пожалуйста, войдите в систему');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const userId = session.data.session.user.id;
+
+    // Получаем профиль из таблицы profiles
+    let { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error || !data) {
+      alert('Ошибка загрузки профиля');
+      return;
+    }
+
+    document.getElementById('avatar-img').src = data.avatar_url || '';
+    document.getElementById('name').textContent = data.name;
+    document.getElementById('phone').textContent = data.phone;
+    document.getElementById('rating').textContent = data.rating || 0;
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  });
+
+  loadProfile();
+</script>
 
 </body>
 </html>
+
 
 
 
