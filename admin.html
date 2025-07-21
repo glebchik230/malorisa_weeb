@@ -2,63 +2,44 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Админ-панель</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/backendless/7.0.5/backendless.min.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff0f5;
-      color: #333;
-      padding: 20px;
+      font-family: sans-serif;
+      background-color: #ffeef4;
+      padding: 30px;
+      text-align: center;
     }
     h2 {
-      color: #a03e84;
+      color: #d63384;
     }
     .user-list {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background: white;
-      padding: 10px;
-      margin-bottom: 20px;
+      margin: 20px auto;
+      max-width: 500px;
     }
     .user-item {
-      padding: 8px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
+      background: #fff;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .user-item:hover {
-      background-color: #ffe6f0;
-    }
-    .form-section {
-      margin-top: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    select, textarea, button {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 90%;
     }
     button {
-      padding: 10px 20px;
-      margin: 10px 10px 0 0;
-      border: none;
-      border-radius: 8px;
-      background-color: #d96da1;
+      background-color: #ff69b4;
       color: white;
-      font-size: 16px;
+      border: none;
       cursor: pointer;
     }
     button:hover {
-      background-color: #c35591;
-    }
-    select, textarea {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      background-color: #e056ab;
     }
   </style>
 </head>
@@ -67,100 +48,94 @@
 
   <div class="user-list" id="user-list">Загрузка пользователей...</div>
 
-  <div class="form-section">
-    <label>Выбранный пользователь: <strong id="selected-user">никто</strong></label>
-    <textarea id="message-text" placeholder="Введите сообщение..."></textarea>
-    <select id="message-type">
-      <option value="похвала">Похвала</option>
-      <option value="выговор">Выговор</option>
-    </select>
-    <button onclick="sendMessage()">Отправить сообщение</button>
-  </div>
+  <br />
+  <button onclick="logout()">Выйти из аккаунта</button>
+  <br /><br />
+  <a href="index.html">← Назад на главную</a>
 
-  <button onclick="goBack()">Назад</button>
-  <button onclick="logout()">Выйти</button>
-
+  <!-- Supabase SDK + config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="config.js"></script>
   <script>
-    const APP_ID = "DCA33B47-8058-4798-8EFA-40BE7FDE1DB3";
-    const API_KEY = "433B51A9-0249-48FE-96EF-C94A139DD378";
-    Backendless.initApp(APP_ID, API_KEY);
-
-    let selectedUser = null;
-
-    async function loadUsers() {
-      try {
-        const users = await Backendless.Data.of("Users").find();
-        const userList = document.getElementById("user-list");
-        userList.innerHTML = "";
-
-        users.forEach(user => {
-          const div = document.createElement("div");
-          div.className = "user-item";
-          div.textContent = user.phone || user.email;
-          div.onclick = () => {
-            selectedUser = user;
-            document.getElementById("selected-user").innerText = user.phone || user.email;
-          };
-          userList.appendChild(div);
-        });
-
-        if (users.length === 0) {
-          userList.innerHTML = "Нет пользователей.";
-        }
-      } catch (e) {
-        document.getElementById("user-list").innerText = "Ошибка загрузки пользователей: " + e.message;
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !user.phone || !user.phone.includes('+79004163928')) {
+        alert('Доступ только для администратора');
+        window.location.href = 'register.html';
       }
     }
 
-    async function sendMessage() {
-      if (!selectedUser) return alert("Выберите пользователя.");
+    async function fetchUsers() {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, phone, rating');
 
-      const text = document.getElementById("message-text").value.trim();
-      const type = document.getElementById("message-type").value;
+      const container = document.getElementById('user-list');
+      container.innerHTML = '';
 
-      if (!text) return alert("Введите текст сообщения.");
-
-      const record = {
-        userId: selectedUser.objectId,
-        phone: selectedUser.phone || selectedUser.email,
-        text,
-        type,
-        timestamp: new Date()
-      };
-
-      try {
-        await Backendless.Data.of("Messages").save(record);
-
-        // Обновляем рейтинг
-        const currentRating = selectedUser.rating || 0;
-        selectedUser.rating = type === "похвала" ? currentRating + 1 : currentRating - 1;
-        await Backendless.Data.of("Users").save(selectedUser);
-
-        alert("Сообщение отправлено!");
-        document.getElementById("message-text").value = "";
-      } catch (e) {
-        alert("Ошибка отправки: " + e.message);
+      if (error) {
+        container.innerHTML = 'Ошибка загрузки пользователей';
+        return;
       }
-    }
 
-    function goBack() {
-      window.location.href = "index.html";
-    }
-
-    function logout() {
-      Backendless.UserService.logout().then(() => {
-        localStorage.removeItem("user");
-        window.location.href = "profile.html";
+      data.forEach(user => {
+        const div = document.createElement('div');
+        div.className = 'user-item';
+        div.innerHTML = `
+          <strong>Телефон:</strong> ${user.phone}<br>
+          <strong>Рейтинг:</strong> ${user.rating}<br>
+          <select id="type-${user.id}">
+            <option value="praise">Похвала</option>
+            <option value="warning">Выговор</option>
+          </select><br>
+          <textarea id="text-${user.id}" placeholder="Введите сообщение..."></textarea><br>
+          <button onclick="sendMessage('${user.id}')">Отправить</button>
+        `;
+        container.appendChild(div);
       });
     }
 
-    loadUsers();
-  </script>
-  <!-- Подключение библиотеки Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    async function sendMessage(userId) {
+      const type = document.getElementById(`type-${userId}`).value;
+      const content = document.getElementById(`text-${userId}`).value;
 
-<!-- Подключение конфигурации (обязательно после supabase.min.js!) -->
-<script src="config.js"></script>
+      if (!content.trim()) {
+        alert('Введите сообщение');
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from('messages')
+        .insert([{ user_id: userId, content, type }]);
+
+      if (insertError) {
+        alert('Ошибка при отправке');
+        return;
+      }
+
+      const change = type === 'praise' ? 1 : -1;
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ rating: supabase.literal(`rating + ${change}`) })
+        .eq('id', userId);
+
+      if (updateError) {
+        alert('Ошибка при обновлении рейтинга');
+        return;
+      }
+
+      alert('Уведомление отправлено');
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = 'register.html';
+    }
+
+    checkAdmin();
+    fetchUsers();
+  </script>
 </body>
 </html>
 
