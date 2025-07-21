@@ -1,66 +1,113 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Кабинет</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Личный кабинет</title>
   <style>
-    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f9f0f7;display:flex;align-items:center;justify-content:center;height:100vh}
-    .box{background:#fff;padding:30px;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,0.1);width:100%;max-width:360px;text-align:center}
-    img{width:80px;height:80px;border-radius:50%;margin-bottom:15px}
-    button{width:calc(100% - 20px);margin:8px;padding:10px;background:#cc6699;color:#fff;border:none;border-radius:8px;cursor:pointer}
-    button:hover{background:#b35588}
-    ul{text-align:left;margin:12px;max-height:120px;overflow:auto;padding:0;list-style:none}
-    li{padding:6px;border-bottom:1px solid #eee}
-    .back{margin-top:12px;font-size:14px}
-    .back a{color:#999;text-decoration:none}
+    body {
+      font-family: sans-serif;
+      background-color: #ffeef4;
+      padding: 30px;
+      text-align: center;
+    }
+    h2 {
+      color: #d63384;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #e056ab;
+    }
+    #notifications {
+      margin-top: 20px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>Личный кабинет</h2>
-    <p><strong>Имя:</strong> <span id="nm"></span></p>
-    <p><strong>Рейтинг:</strong> <span id="rt">0</span></p>
-    <button onclick="showNot()">Уведомления</button>
-    <button onclick="lg()">Выйти</button>
-    <div id="notes" style="display:none">
-      <h3>Уведомления:</h3><ul id="lst"></ul>
-    </div>
-    <div class="back"><a href="profile.html">← Назад</a></div>
+  <h2>Личный кабинет</h2>
+  <div class="card">
+    <p><strong>Телефон:</strong> <span id="user-phone">Загрузка...</span></p>
+    <p><strong>Рейтинг:</strong> <span id="user-rating">0</span></p>
+    <button onclick="loadNotifications()">Показать уведомления</button>
+    <div id="notifications"></div>
+    <button onclick="logout()">Выйти</button>
+    <br><br>
+    <a href="index.html">← На главную</a>
   </div>
- <script>
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user || user.role !== 'user') {
-    location.href = 'profile.html';
-  }
 
-  const users = JSON.parse(localStorage.getItem('users') || '[]');
-  const actualUser = users.find(u => u.phone === user.phone);
-  if (!actualUser) {
-    alert('Пользователь не найден');
-    localStorage.removeItem('user');
-    location.href = 'profile.html';
-  }
+  <!-- Supabase SDK + config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="config.js"></script>
+  <script>
+    let userId = null;
 
-  document.getElementById('nm').textContent = actualUser.name;
-  document.getElementById('rt').textContent = actualUser.rating;
+    async function getUserProfile() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        window.location.href = 'register.html';
+        return;
+      }
 
-  function showNot() {
-    const lst = document.getElementById('lst');
-    lst.innerHTML = '';
-    (actualUser.notifications || []).forEach(note => {
-      const li = document.createElement('li');
-      li.textContent = note;
-      lst.appendChild(li);
-    });
-    document.getElementById('notes').style.display = 'block';
-  }
+      userId = user.id;
+      const phone = user.phone?.replace('+7', '') || 'Неизвестно';
+      document.getElementById('user-phone').innerText = phone;
 
-  function lg() {
-    localStorage.removeItem('user');
-    location.href = 'profile.html';
-  }
-</script>
+      const { data, error: profileError } = await supabase
+        .from('profiles')
+        .select('rating')
+        .eq('id', user.id)
+        .single();
+
+      if (data) {
+        document.getElementById('user-rating').innerText = data.rating;
+      }
+    }
+
+    async function loadNotifications() {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        alert('Ошибка при загрузке уведомлений');
+        return;
+      }
+
+      const container = document.getElementById('notifications');
+      container.innerHTML = '';
+      data.forEach(msg => {
+        const el = document.createElement('div');
+        el.textContent = `${msg.type === 'praise' ? 'Похвала' : 'Выговор'}: ${msg.content}`;
+        container.appendChild(el);
+      });
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = 'register.html';
+    }
+
+    getUserProfile();
+  </script>
 </body>
 </html>
 
