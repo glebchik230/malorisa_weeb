@@ -1,97 +1,84 @@
-/* 🌸 Общие стили */
+/* Общие стили */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f0f7;
+  background-color: #f9f0f7; /* нежный светло-розовый фон */
   color: #333;
   min-height: 100vh;
 }
 h1 {
-  font-size: 22px;
-  color: #cc6699;
-  text-align: center;
+  font-size: 22px;   /* размер шрифта */
+  color: #cc6699;    /* цвет текста */
+  text-align: center; /* выравнивание по центру */
+}
+/* Основной текст на главном экране */
+.main-description {
+  max-width: 600px;       /* Ограничиваем ширину текста */
+  margin: 0 auto;         /* Центрируем по горизонтали */
+  font-size: 18px;        /* Размер шрифта */
+  line-height: 1.6;       /* Межстрочный интервал для удобства чтения */
+  color: #cc6699;         /* Цвет текста из твоей палитры */
+  text-align: center;     /* Выравнивание текста по центру */
+  padding: 10px 20px;     /* Отступы вокруг текста */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Красивый читаемый шрифт */
 }
 
-/* 📄 Описание на главной */
-.main-description {
-  max-width: 600px;
-  margin: 0 auto;
-  font-size: 18px;
-  line-height: 1.6;
-  color: #cc6699;
+/* Заголовок и параграф */
+h1 {
   text-align: center;
-  padding: 10px 20px;
+  margin-top: 60px;
+  color: #cc6699;
 }
 
 p {
-  max-width: 80%;
-  margin: 0 auto 30px auto;
+ max-width: 80%; /* ← сделает текст уже */
+  margin: 0 auto 30px auto; /* центрирует и добавляет отступ снизу */
   font-size: 14px;
   line-height: 1.5;
   color: #555;
 }
-
-/* 💼 Контейнер профиля */
-.profile-container,
-.container {
+.profile-container {
   max-width: 500px;
   margin: 40px auto;
-  background: #fff0f6;
+  background: #fff0f6; /* светло-розовый */
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(204, 102, 153, 0.3);
+  font-family: Arial, sans-serif;
+  color: #663366;
 }
 
-/* 🏷️ Метки и поля */
 label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-weight: 600;
 }
+
 input[type="text"],
 input[type="tel"],
-input[type="file"],
-input[type="password"],
-input[type="email"] {
+input[type="file"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 8px;
   border-radius: 10px;
   border: 1px solid #cc6699;
   font-size: 16px;
-  box-sizing: border-box;
 }
 
-/* 🔘 Кнопки */
 .btn {
   background-color: #cc6699;
   color: white;
   border: none;
-  padding: 12px 20px;
-  margin-top: 10px;
+  padding: 10px 20px;
+  margin-top: 15px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 700;
-  transition: 0.3s;
 }
+
 .btn:hover {
   background-color: #b0527d;
 }
-.main-buttons a.btn {
-  background-color: #ffccff;
-  color: #660066;
-  padding: 14px 28px;
-  font-size: 18px;
-  width: 240px;
-  text-align: center;
-  box-shadow: 0 3px 6px rgba(204, 102, 153, 0.3);
-}
-.main-buttons a.btn:hover {
-  background-color: #cc6699;
-  color: #fff;
-}
 
-/* 🖼️ Аватар */
 .avatar {
   width: 120px;
   height: 120px;
@@ -100,22 +87,21 @@ input[type="email"] {
   margin-bottom: 15px;
 }
 
-/* 🧾 Профильная информация */
 .profile-info p {
   margin: 8px 0;
   font-size: 18px;
 }
 
-/* 🔗 Ссылки */
 a {
   color: #cc6699;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
 
-/* 🍔 Бургер-меню */
+/* Бургер-кнопка */
 .burger {
   position: fixed;
   top: 20px;
@@ -128,13 +114,14 @@ a:hover {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .burger div {
   background-color: #cc6699;
   height: 4px;
   border-radius: 2px;
 }
 
-/* 📋 Sidebar */
+/* Выдвижная панель */
 .sidebar {
   position: fixed;
   top: 0;
@@ -148,23 +135,56 @@ a:hover {
   flex-direction: column;
   gap: 20px;
   transition: left 0.3s ease;
-  z-index: 9999;
+  z-index: 9999; /* Сделано поверх всех остальных */
 }
+
 .sidebar.active {
-  left: 0;
+  left: 0; /* выезжает при активном классе */
 }
+
 .sidebar a {
   color: #cc6699;
   font-weight: 600;
   font-size: 18px;
+  text-decoration: none;
   padding: 10px 12px;
   border-radius: 10px;
+  transition: background-color 0.2s ease;
 }
+
 .sidebar a:hover {
   background-color: #ffccff;
 }
 
-/* 🧩 Кнопки в правом верхнем углу */
+/* Кнопки на главном экране */
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.main-buttons a.btn {
+  background-color: #ffccff;
+  color: #660066;
+  padding: 14px 28px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(204, 102, 153, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-buttons a.btn:hover {
+  background-color: #cc6699;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(204, 102, 153, 0.6);
+}
+
+/* Хедер кнопки (если нужны) */
 header {
   position: fixed;
   top: 15px;
@@ -173,8 +193,8 @@ header {
   display: flex;
   gap: 15px;
 }
-.btn-main,
-.btn-profile {
+
+.btn-main, .btn-profile {
   background-color: #ffccff;
   border: none;
   padding: 10px 18px;
@@ -183,19 +203,80 @@ header {
   color: #660066;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(204, 102, 153, 0.25);
+  transition: background-color 0.3s ease;
 }
-.btn-main:hover,
-.btn-profile:hover {
+
+.btn-main:hover, .btn-profile:hover {
   background-color: #cc6699;
   color: #fff;
 }
-
-/* 📦 Кнопки под профилем */
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  justify-content: center;
+/* 📦 Основной контейнер страницы */
+.container {
+  max-width: 400px;               /* Максимальная ширина контейнера */
+  margin: 40px auto;              /* Отступ сверху и снизу 40px, по центру по горизонтали */
+  padding: 20px;                  /* Внутренний отступ */
+  background-color: #fff0f5;      /* Светло-розовый фон */
+  border-radius: 20px;            /* Скругление углов контейнера */
+  box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Легкая тень вокруг */
+  font-family: Arial, sans-serif; /* Шрифт интерфейса */
 }
 
+/* 📝 Стилизация меток к полям формы */
+.profile-form label {
+  display: block;                 /* Каждая метка на отдельной строке */
+  margin-top: 15px;              /* Отступ сверху */
+}
+
+/* 🧾 Поля ввода */
+.profile-form input {
+  width: 100%;                   /* Ширина на всю доступную область */
+  padding: 10px;                 /* Внутренние отступы */
+  margin-top: 5px;               /* Отступ сверху от label */
+  border-radius: 10px;           /* Скругленные углы */
+  border: 1px solid #ccc;        /* Светло-серая рамка */
+  box-sizing: border-box;        /* Учитывать padding в общей ширине */
+}
+
+/* 🔘 Кнопка (общий стиль для всех кнопок) */
+.btn {
+  margin-top: 20px;              /* Отступ сверху */
+  padding: 10px;                 /* Внутренний отступ */
+  width: 100%;                   /* Кнопка на всю ширину */
+  background-color: #cc6699;     /* Основной розово-лиловый цвет */
+  color: white;                  /* Цвет текста */
+  border: none;                  /* Без рамки */
+  border-radius: 15px;           /* Скругленные углы */
+  cursor: pointer;               /* Указатель при наведении */
+  font-weight: bold;            /* Жирный текст */
+}
+
+/* 🔘 Эффект при наведении на кнопку */
+.btn:hover {
+  background-color: #b24d80;     /* Более насыщенный оттенок */
+}
+
+/* 📋 Блок отображения профиля */
+.profile-box {
+  background: #ffe6f0;           /* Очень светлый розовый фон */
+  border-radius: 15px;           /* Скруглённые углы */
+  padding: 20px;                 /* Внутренний отступ */
+  text-align: center;            /* Выравнивание по центру */
+}
+
+/* 👤 Аватар пользователя */
+.avatar {
+  width: 120px;                  /* Ширина изображения */
+  height: 120px;                 /* Высота изображения */
+  object-fit: cover;             /* Обрезать по контейнеру, сохраняя пропорции */
+  border-radius: 50%;            /* Круглый аватар */
+  margin-bottom: 15px;           /* Отступ снизу */
+}
+
+/* 🔃 Группа кнопок под профилем */
+.button-group {
+  display: flex;                 /* Использовать flex-блок */
+  gap: 10px;                     /* Расстояние между кнопками */
+  margin-top: 20px;              /* Отступ сверху */
+  justify-content: center;      /* Центрировать по горизонтали */
+}
 
