@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Операторы колл-центра</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Операторы колл-центра — Малориса</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+  </script>
 </head>
-<body class="operators">
-  <div class="container">
-    <h1>Работа операторов колл-центра</h1>
+<body>
+  <!-- Бургер-кнопка -->
+  <div class="burger" onclick="toggleSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- Выдвижная панель -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html">Главная</a>
+    <a href="hot-kitchen.html">Горячий цех</a>
+    <a href="cold-kitchen.html">Холодный цех</a>
+    <a href="operators.html">Операторы колл-центра</a>
+    <a href="about.html">О нас</a>
+    <a href="contacts.html">Контакты</a>
+  </div>
+
+  <header>
+    <a href="index.html" class="btn btn-main" style="margin: 20px;">На главную</a>
+  </header>
+
+  <main>
+    <h2>Работа операторов колл-центра</h2>
     <p>Операторы колл-центра — это сотрудники, которые отвечают на входящие звонки и помогают клиентам решать их вопросы по телефону. Они являются лицом компании и играют важную роль в формировании впечатления клиента о сервисе.</p>
 
     <h2>Основные задачи операторов колл-центра:</h2>
@@ -31,7 +57,6 @@
     <p>Также важно поддерживать баланс между потребностями клиента и возможностями компании. Оператор должен учитывать ограничения по времени обработки заказа, наличию товаров на складе и другим факторам, чтобы обеспечить качественное обслуживание.</p>
 
     <p>Таким образом, работа операторов колл-центра требует не только технических знаний, но и навыков общения, умения быстро реагировать на запросы клиентов и находить оптимальные решения в сложных ситуациях.</p>
-  </div>
+  </main>
 </body>
 </html>
-
