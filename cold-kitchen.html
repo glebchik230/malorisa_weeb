@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Холодный цех</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Холодный цех — Малориса</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+  </script>
 </head>
-<body class="cold-kitchen">
-  <div class="container">
-    <h1>Холодный цех: искусство создания суши и роллов</h1>
+<body>
+  <!-- Бургер-кнопка -->
+  <div class="burger" onclick="toggleSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- Выдвижная панель -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html">Главная</a>
+    <a href="hot-kitchen.html">Горячий цех</a>
+    <a href="cold-kitchen.html">Холодный цех</a>
+    <a href="operators.html">Операторы колл-центра</a>
+    <a href="about.html">О нас</a>
+    <a href="contacts.html">Контакты</a>
+  </div>
+
+  <header>
+    <a href="index.html" class="btn btn-main" style="margin: 20px;">На главную</a>
+  </header>
+
+  <main>
+    <h2>Холодный цех: искусство создания суши и роллов</h2>
     <p>Холодный цех — это сердце кухни для любителей японской кухни. Здесь мастера своего дела создают изысканные роллы гунканы и суши, которые радуют гостей неповторимым вкусом и эстетикой.</p>
 
     <h2>Основные задачи холодного цеха</h2>
@@ -22,7 +48,6 @@
     <p>Работа в холодном цехе требует глубоких знаний технологий приготовления суши и роллов, а также умения чувствовать текстуру и вкус ингредиентов. Это делает работу в холодном цехе особенно интересной для тех, кто увлечён японской кухней и готов постоянно совершенствовать свои навыки.</p>
 
     <p>Холодный цех — это место, где искусство создания суши и роллов воплощается в жизнь, и каждый день здесь появляется что-то новое и вкусное для любителей японской кухни.</p>
-  </div>
+  </main>
 </body>
 </html>
-
