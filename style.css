@@ -53,7 +53,7 @@ header {
 /* Бургер */
 .burger {
   position: absolute;
-  top: 15px;
+  top: 10px;
   left: 15px;
   cursor: pointer;
 }
@@ -88,4 +88,5 @@ header {
   background: #ffb6c1;
   color: white;
 }
+
 
