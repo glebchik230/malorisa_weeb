@@ -88,6 +88,25 @@ header {
   background: #ffb6c1;
   color: white;
 }
+.btn-home {
+  width: 140px;             /* Уже, чем стандартная */
+  background-color: #cc6699; /* Нежно-розовый фон */
+  color: white;              /* Белый текст */
+  border: none;
+  border-radius: 20px;       /* Скругленные углы */
+  padding: 10px 0;           /* Вертикальные отступы */
+  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-home:hover {
+  background-color: #b0527d; /* Цвет при наведении */
+}
+
 
 
 
