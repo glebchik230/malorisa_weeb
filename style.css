@@ -21,6 +21,7 @@ header {
 }
 
 .main-description {
+  text-align: center;
   max-width: 600px;
   margin: auto;
   padding: 10px;
@@ -87,3 +88,4 @@ header {
   background: #ffb6c1;
   color: white;
 }
+
