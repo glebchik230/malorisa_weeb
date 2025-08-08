@@ -16,8 +16,6 @@
 
   <!-- Выдвижная панель -->
   <div id="sidebar" class="sidebar">
-    <!-- Кнопка Личный кабинет с корректной функцией -->
-    <a href="#" onclick="goToCabinet()">Личный кабинет</a>
     <a href="about.html">О нас</a>
     <a href="https://malorisa.ru" target="_blank" rel="noopener noreferrer">Сайт Малориса</a>
     <a href="contacts.html">Контакты</a>
@@ -33,7 +31,7 @@
     <h1>Здравствуйте! Мы — онлайн-ресторан «Малориса».</h1>
     <p class="main-description">
       Рады приветствовать вас в нашем приложении. Если вы здесь, значит, скоро станете частью нашей команды.
-      Пожалуйста, зарегистрируйтесь! С меню нашего заведения вы можете ознакомиться по ссылке:
+      С меню нашего заведения вы можете ознакомиться по ссылке:
       <a href="https://malorisa.ru/" target="_blank" rel="noopener noreferrer">https://malorisa.ru/</a>.
     </p>
 
@@ -45,45 +43,11 @@
   </main>
 
   <script>
-    // Переключение бокового меню
     function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("active");
-    }
-
-    // Функция для кнопки "Личный кабинет"
-    function goToCabinet() {
-      const userStr = localStorage.getItem('user');
-      if (!userStr) {
-        // Нет сохранённого пользователя — переход на страницу входа
-        window.location.href = 'login.html';
-        return;
-      }
-
-      let user;
-      try {
-        user = JSON.parse(userStr);
-      } catch {
-        // Если данные испорчены, очистим и отправим на вход
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-        return;
-      }
-
-      // Проверяем поле phone
-      if (!user.phone) {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      // Если админ
-      if (user.phone === '9004163928') {
-        window.location.href = 'admin.html';
-        return;
-      }
-
-      // Обычный пользователь
-      window.location.href = 'profile.html';
     }
   </script>
 </body>
 </html>
+
+
