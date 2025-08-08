@@ -28,7 +28,31 @@
     <a href="about.html">О нас</a>
     <a href="contacts.html">Контакты</a>
   </div>
+  <script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("active");
+  }
 
+  // Закрываем меню, если клик вне меню и не по кнопке бургера
+  document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById("sidebar");
+    const burger = document.querySelector('.burger');
+    if (sidebar.classList.contains('active') && 
+        !sidebar.contains(event.target) && 
+        !burger.contains(event.target)) {
+      sidebar.classList.remove('active');
+    }
+  });
+
+  // Закрываем меню при клике на любую ссылку в меню
+  const sidebarLinks = document.querySelectorAll('#sidebar a');
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById("sidebar").classList.remove('active');
+    });
+  });
+</script>
   <header>
     <a href="index.html" class="btn btn-main" style="margin: 20px;">На главную</a>
   </header>
